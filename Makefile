@@ -1,7 +1,7 @@
 -include .env
 export
 
-.PHONY: dev build preview studio deploy-studio
+.PHONY: dev build preview studio deploy-studio upload-image
 
 dev:
 	yarn dev
@@ -17,3 +17,6 @@ studio:
 
 deploy-studio:
 	cd studio && npx sanity deploy
+
+upload-image:
+	@./scripts/upload-image.sh "$(FILE)" "$(LABEL)" "$(DESCRIPTION)"

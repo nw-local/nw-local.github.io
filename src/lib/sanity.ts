@@ -22,7 +22,7 @@ export async function getStrains() {
     `*[_type == "strain"] | order(sortOrder asc, name asc) {
       _id, name, slug, strainType, effects, terpenes,
       thcRange, cbdRange, nextHarvestDate,
-      heroImage { asset->, alt },
+      heroImage { asset->, alt, crop, hotspot },
       featured, available
     }`
   )
@@ -33,8 +33,8 @@ export async function getStrain(slug: string) {
     `*[_type == "strain" && slug.current == $slug][0] {
       _id, name, slug, strainType, description,
       effects, terpenes, thcRange, cbdRange, nextHarvestDate,
-      heroImage { asset->, alt },
-      gallery[] { asset->, alt },
+      heroImage { asset->, alt, crop, hotspot },
+      gallery[] { asset->, alt, crop, hotspot },
       featured, available
     }`,
     { slug }
@@ -48,7 +48,7 @@ export async function getProducts() {
     `*[_type == "product"] | order(sortOrder asc, name asc) {
       _id, name, slug, category, weight, available,
       image { asset->, alt },
-      "strain": strain->{ _id, name, slug, strainType, heroImage { asset->, alt } }
+      "strain": strain->{ _id, name, slug, strainType, heroImage { asset->, alt, crop, hotspot } }
     }`
   )
 }
@@ -70,7 +70,7 @@ export async function getBlogPosts() {
   return sanityClient.fetch(
     `*[_type == "blogPost"] | order(publishedAt desc) {
       _id, title, slug, description, publishedAt, tags,
-      heroImage { asset->, alt }
+      heroImage { asset->, alt, crop, hotspot }
     }`
   )
 }
@@ -79,7 +79,7 @@ export async function getBlogPost(slug: string) {
   return sanityClient.fetch(
     `*[_type == "blogPost" && slug.current == $slug][0] {
       _id, title, slug, description, publishedAt, tags,
-      heroImage { asset->, alt },
+      heroImage { asset->, alt, crop, hotspot },
       body[] {
         ...,
         _type == "image" => { asset->, alt, caption }
@@ -109,7 +109,7 @@ export async function getPage(pageId: string) {
   return sanityClient.fetch(
     `*[_type == "page" && pageId == $pageId][0] {
       _id, title, pageId, seoDescription,
-      heroImage { asset->, alt },
+      heroImage { asset->, alt, crop, hotspot },
       body[] {
         ...,
         _type == "image" => { asset->, alt, caption }
