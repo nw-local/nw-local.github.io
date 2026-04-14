@@ -92,6 +92,12 @@ header nav {
   color: var(--accent);
 }
 
+.nav-logo-image {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
 .nav-links {
   display: flex;
   align-items: center;

@@ -1,4 +1,6 @@
 ---
+import { urlFor } from '../lib/image'
+
 interface Props {
   settings: {
     siteTitle?: string
@@ -23,7 +25,16 @@ const NAV_LINKS = [
 <header>
   <nav>
     <a href="/" class="nav-logo">
-      {settings?.siteTitle ?? 'Northwest Local Cannabis'}
+      {settings?.logo?.asset ? (
+        <img
+          src={urlFor(settings.logo).height(40).format('webp').url()}
+          alt={settings.logo.alt ?? settings?.siteTitle ?? 'Northwest Local Cannabis'}
+          height="40"
+          class="nav-logo-image"
+        />
+      ) : (
+        settings?.siteTitle ?? 'Northwest Local Cannabis'
+      )}
     </a>
     <div class="nav-links">
       {NAV_LINKS.map((link) => (
