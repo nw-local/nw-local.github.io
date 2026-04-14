@@ -1,0 +1,22 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Hero from '../../components/Hero.astro'
+import BlogPostCard from '../../components/BlogPostCard.astro'
+import { getBlogPosts } from '../../lib/sanity'
+
+const posts = await getBlogPosts() ?? []
+---
+
+<Layout title="Blog" description="News, updates, and education from Northwest Local Cannabis.">
+  <Hero title="Blog" subtitle="News, new drops, and cannabis education." />
+
+  <div class="card-grid">
+    {posts.map((post: Record<string, unknown>) => (
+      <BlogPostCard {...post as any} />
+    ))}
+  </div>
+
+  {posts.length === 0 && (
+    <p style="text-align:center;margin-top:2rem;">No posts yet. Check back soon.</p>
+  )}
+</Layout>
