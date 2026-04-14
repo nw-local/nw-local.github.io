@@ -22,7 +22,9 @@ const CATEGORY_FILTERS = [
 
   <div class="card-grid">
     {products.map((product) => (
-      <ProductCard {...product} />
+      <div data-filter-item data-category={product.category}>
+        <ProductCard {...product} />
+      </div>
     ))}
   </div>
 

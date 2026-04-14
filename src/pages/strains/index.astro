@@ -13,16 +13,22 @@ const STRAIN_FILTERS = [
   { value: 'sativa', label: 'Sativa' },
   { value: 'hybrid', label: 'Hybrid' },
 ]
+
+const allTerpenes = [...new Set(strains.flatMap((strain: { terpenes?: string[] }) => strain.terpenes ?? []))].sort()
+const TERPENE_FILTERS = allTerpenes.map((terpene: string) => ({ value: terpene.toLowerCase(), label: terpene }))
 ---
 
 <Layout title="Strains" description="Explore our craft cannabis strains.">
   <Hero title="Our Strains" subtitle="Craft genetics grown in Washington State." />
 
-  <FilterBar filters={STRAIN_FILTERS} filterAttribute="data-strain-type" />
+  <FilterBar filters={STRAIN_FILTERS} filterAttribute="data-strain-type" label="Type" />
+  {TERPENE_FILTERS.length > 0 && (
+    <FilterBar filters={TERPENE_FILTERS} filterAttribute="data-terpenes" matchMode="contains" label="Terpenes" />
+  )}
 
   <div class="card-grid">
     {strains.map((strain) => (
-      <div data-strain-type={strain.strainType}>
+      <div data-filter-item data-strain-type={strain.strainType} data-terpenes={strain.terpenes?.map((t: string) => t.toLowerCase()).join(',')}>
         <StrainCard {...strain} />
       </div>
     ))}

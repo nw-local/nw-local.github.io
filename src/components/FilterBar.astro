@@ -2,12 +2,15 @@
 interface Props {
   filters: { value: string; label: string }[]
   filterAttribute?: string
+  matchMode?: 'exact' | 'contains'
+  label?: string
 }
 
-const { filters, filterAttribute = 'data-category' } = Astro.props
+const { filters, filterAttribute = 'data-category', matchMode = 'exact', label } = Astro.props
 ---
 
-<div class="filter-bar" data-filter-attribute={filterAttribute}>
+<div class="filter-bar" data-filter-attribute={filterAttribute} data-match-mode={matchMode}>
+  {label && <span class="filter-label">{label}</span>}
   <button class="filter-button active" data-filter="all">All</button>
   {filters.map((filter) => (
     <button class="filter-button" data-filter={filter.value}>
@@ -18,25 +21,54 @@ const { filters, filterAttribute = 'data-category' } = Astro.props
 
 <script>
   function initFilterBars() {
+    const container = new Map<Element, HTMLElement[]>()
+
     document.querySelectorAll<HTMLElement>('.filter-bar').forEach((bar) => {
-      const attribute = bar.dataset.filterAttribute ?? 'data-category'
+      const parent = bar.closest('main') ?? bar.parentElement
+      if (!parent) return
+      if (!container.has(parent)) {
+        const cardGrid = parent.querySelector('.card-grid')
+        const cards = Array.from(cardGrid?.querySelectorAll<HTMLElement>(':scope > [data-filter-item]') ?? [])
+        container.set(parent, cards)
+      }
+    })
+
+    function applyFilters(parent: Element) {
+      const cards = container.get(parent) ?? []
+      const bars = parent.querySelectorAll<HTMLElement>('.filter-bar')
+
+      cards.forEach((card) => {
+        let visible = true
+        bars.forEach((bar) => {
+          const attribute = bar.dataset.filterAttribute ?? 'data-category'
+          const mode = bar.dataset.matchMode ?? 'exact'
+          const activeButton = bar.querySelector<HTMLButtonElement>('.filter-button.active')
+          const filter = activeButton?.dataset.filter ?? 'all'
+
+          if (filter === 'all') return
+
+          const value = card.getAttribute(attribute) ?? ''
+          if (mode === 'contains') {
+            const values = value.split(',').map((v) => v.trim().toLowerCase())
+            if (!values.includes(filter.toLowerCase())) visible = false
+          } else {
+            if (value !== filter) visible = false
+          }
+        })
+        card.style.display = visible ? '' : 'none'
+      })
+    }
+
+    document.querySelectorAll<HTMLElement>('.filter-bar').forEach((bar) => {
+      const parent = bar.closest('main') ?? bar.parentElement
+      if (!parent) return
       const buttons = bar.querySelectorAll<HTMLButtonElement>('.filter-button')
-      const cards = bar.parentElement?.querySelectorAll<HTMLElement>(`[${attribute}]`) ?? []
 
       buttons.forEach((button) => {
         button.addEventListener('click', () => {
-          const filter = button.dataset.filter
-
-          buttons.forEach((buttonElement) => buttonElement.classList.remove('active'))
+          buttons.forEach((b) => b.classList.remove('active'))
           button.classList.add('active')
-
-          cards.forEach((card) => {
-            if (filter === 'all' || card.getAttribute(attribute) === filter) {
-              card.style.display = ''
-            } else {
-              card.style.display = 'none'
-            }
-          })
+          applyFilters(parent)
         })
       })
     })
