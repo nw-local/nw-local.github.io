@@ -11,7 +11,7 @@ export const sanityClient = createClient({
   projectId: SANITY_PROJECT_ID,
   dataset: SANITY_DATASET,
   apiVersion: '2026-04-14',
-  useCdn: true,
+  useCdn: false,
   token: SANITY_API_TOKEN,
 })
 
