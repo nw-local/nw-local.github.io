@@ -9,6 +9,7 @@ interface Props {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 const { title, description, ogImage } = Astro.props
+const resolvedOgImage = ogImage ?? new URL('/og-default.jpg', Astro.site).toString()
 ---
 
 <meta charset="utf-8" />
@@ -28,10 +29,10 @@ const { title, description, ogImage } = Astro.props
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-{ogImage && <meta property="og:image" content={ogImage} />}
+<meta property="og:image" content={resolvedOgImage} />
 
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
-{ogImage && <meta property="twitter:image" content={ogImage} />}
+<meta property="twitter:image" content={resolvedOgImage} />
