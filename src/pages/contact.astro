@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Hero from '../components/Hero.astro'
+import PortableText from '../components/PortableText.astro'
+import ContactInfo from '../components/ContactInfo.astro'
+import { getPage, getSiteSettings } from '../lib/sanity'
+
+const page = await getPage('contact')
+const settings = await getSiteSettings()
+---
+
+<Layout
+  title={page?.title ?? 'Contact'}
+  description={page?.seoDescription ?? 'Get in touch with Northwest Local Cannabis.'}
+>
+  <Hero title={page?.title ?? 'Contact Us'} />
+
+  <div style="max-width:var(--content-width);">
+    {page?.body && <PortableText value={page.body} />}
+
+    <ContactInfo
+      email={settings?.contactEmail}
+      phone={settings?.contactPhone}
+      address={settings?.address}
+    />
+  </div>
+</Layout>

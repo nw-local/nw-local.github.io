@@ -1,0 +1,34 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Hero from '../../components/Hero.astro'
+import SectionHeading from '../../components/SectionHeading.astro'
+import StrainCard from '../../components/StrainCard.astro'
+import FilterBar from '../../components/FilterBar.astro'
+import { getStrains } from '../../lib/sanity'
+
+const strains = await getStrains() ?? []
+
+const STRAIN_FILTERS = [
+  { value: 'indica', label: 'Indica' },
+  { value: 'sativa', label: 'Sativa' },
+  { value: 'hybrid', label: 'Hybrid' },
+]
+---
+
+<Layout title="Strains" description="Explore our craft cannabis strains.">
+  <Hero title="Our Strains" subtitle="Craft genetics grown in Washington State." />
+
+  <FilterBar filters={STRAIN_FILTERS} filterAttribute="data-strain-type" />
+
+  <div class="card-grid">
+    {strains.map((strain) => (
+      <div data-strain-type={strain.strainType}>
+        <StrainCard {...strain} />
+      </div>
+    ))}
+  </div>
+
+  {strains.length === 0 && (
+    <p style="text-align:center;margin-top:2rem;">No strains available yet. Check back soon.</p>
+  )}
+</Layout>

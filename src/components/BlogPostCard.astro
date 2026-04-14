@@ -1,0 +1,39 @@
+---
+import { urlFor } from '../lib/image'
+
+interface Props {
+  title: string
+  slug: { current: string }
+  description: string
+  publishedAt: string
+  heroImage?: { asset: { url: string }; alt?: string }
+}
+
+const { title, slug, description, publishedAt, heroImage } = Astro.props
+const formattedDate = new Date(publishedAt).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+})
+---
+
+<a href={`/blog/${slug.current}`} class="card">
+  <div class="card-image">
+    {heroImage?.asset && (
+      <img
+        src={urlFor(heroImage).width(600).height(375).format('webp').url()}
+        alt={heroImage.alt ?? title}
+        width="600"
+        height="375"
+        loading="lazy"
+      />
+    )}
+  </div>
+  <div class="card-body">
+    <p style="font-size:0.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem;">
+      {formattedDate}
+    </p>
+    <h3>{title}</h3>
+    <p>{description}</p>
+  </div>
+</a>

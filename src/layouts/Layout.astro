@@ -1,0 +1,31 @@
+---
+import BaseHead from '../components/BaseHead.astro'
+import Nav from '../components/Nav.astro'
+import Footer from '../components/Footer.astro'
+import AgeGate from '../components/AgeGate.astro'
+import { getSiteSettings } from '../lib/sanity'
+
+interface Props {
+  title: string
+  description: string
+  ogImage?: string
+}
+
+const { title, description, ogImage } = Astro.props
+const settings = await getSiteSettings()
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} ogImage={ogImage} />
+  </head>
+  <body>
+    <AgeGate message={settings?.ageGateMessage} />
+    <Nav settings={settings} />
+    <main>
+      <slot />
+    </main>
+    <Footer settings={settings} />
+  </body>
+</html>

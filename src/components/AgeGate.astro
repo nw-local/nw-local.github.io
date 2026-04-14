@@ -1,0 +1,44 @@
+---
+interface Props {
+  message?: string
+}
+
+const { message } = Astro.props
+const DEFAULT_MESSAGE = 'You must be 21 years or older to view this site.'
+---
+
+<div id="age-gate" class="age-gate" style="display:none;">
+  <div class="age-gate-content">
+    <h2>Age Verification</h2>
+    <p>{message ?? DEFAULT_MESSAGE}</p>
+    <button id="age-gate-confirm" class="age-gate-button">I am 21 or older</button>
+    <a href="https://www.google.com" class="age-gate-deny">I am under 21</a>
+  </div>
+</div>
+
+<script>
+  const AGE_GATE_KEY = 'nw-local-age-verified'
+
+  function initAgeGate() {
+    const gate = document.getElementById('age-gate')
+    const confirmButton = document.getElementById('age-gate-confirm')
+
+    if (!gate || !confirmButton) return
+
+    if (localStorage.getItem(AGE_GATE_KEY) === 'true') {
+      gate.style.display = 'none'
+      return
+    }
+
+    gate.style.display = 'flex'
+    document.body.style.overflow = 'hidden'
+
+    confirmButton.addEventListener('click', () => {
+      localStorage.setItem(AGE_GATE_KEY, 'true')
+      gate.style.display = 'none'
+      document.body.style.overflow = ''
+    })
+  }
+
+  initAgeGate()
+</script>

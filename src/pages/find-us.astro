@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Hero from '../components/Hero.astro'
+import RetailerCard from '../components/RetailerCard.astro'
+import { getRetailers } from '../lib/sanity'
+
+const retailers = await getRetailers() ?? []
+
+const retailersByCity: Record<string, typeof retailers> = {}
+for (const retailer of retailers) {
+  const city = retailer.city ?? 'Other'
+  if (!retailersByCity[city]) retailersByCity[city] = []
+  retailersByCity[city].push(retailer)
+}
+const sortedCities = Object.keys(retailersByCity).sort()
+---
+
+<Layout title="Find Us" description="Find Northwest Local Cannabis products at dispensaries near you.">
+  <Hero title="Find Us" subtitle="Dispensaries carrying our products across Washington State." />
+
+  {sortedCities.map((city) => (
+    <section style="margin-bottom:2.5rem;">
+      <h3 style="text-transform:uppercase;letter-spacing:2px;font-size:1rem;color:var(--accent);margin-bottom:1rem;">{city}</h3>
+      <div class="card-grid">
+        {retailersByCity[city].map((retailer) => (
+          <RetailerCard {...retailer} />
+        ))}
+      </div>
+    </section>
+  ))}
+
+  {retailers.length === 0 && (
+    <p style="text-align:center;margin-top:2rem;">Retailer listings coming soon.</p>
+  )}
+</Layout>

@@ -1,20 +1,54 @@
 ---
-import { type CollectionEntry, getCollection, render } from 'astro:content';
-import BlogPost from '../../layouts/BlogPost.astro';
+import Layout from '../../layouts/Layout.astro'
+import PortableText from '../../components/PortableText.astro'
+import { getBlogPosts, getBlogPost } from '../../lib/sanity'
+import { urlFor } from '../../lib/image'
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
-	return posts.map((post) => ({
-		params: { slug: post.id },
-		props: post,
-	}));
+  const posts = await getBlogPosts() ?? []
+  return posts.map((post: { slug: { current: string } }) => ({
+    params: { slug: post.slug.current },
+  }))
 }
-type Props = CollectionEntry<'blog'>;
 
-const post = Astro.props;
-const { Content } = await render(post);
+const { slug } = Astro.params
+const post = await getBlogPost(slug!)
+if (!post) return Astro.redirect('/blog')
+
+const formattedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+})
 ---
 
-<BlogPost {...post.data}>
-	<Content />
-</BlogPost>
+<Layout title={post.title} description={post.description}>
+  <article style="max-width:var(--content-width);margin:0 auto;">
+    <header style="margin-bottom:2rem;">
+      <p style="font-size:0.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem;">
+        {formattedDate}
+      </p>
+      <h1>{post.title}</h1>
+      <div class="hero-accent"></div>
+      {post.tags && post.tags.length > 0 && (
+        <div style="display:flex;gap:0.5rem;margin-top:1rem;">
+          {post.tags.map((tag: string) => (
+            <span class="product-badge">{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    {post.heroImage?.asset && (
+      <img
+        src={urlFor(post.heroImage).width(1200).height(600).format('webp').url()}
+        alt={post.heroImage.alt ?? ''}
+        width="1200"
+        height="600"
+        style="border-radius:8px;margin-bottom:2rem;width:100%;object-fit:cover;"
+      />
+    )}
+
+    {post.body && <PortableText value={post.body} />}
+  </article>
+</Layout>

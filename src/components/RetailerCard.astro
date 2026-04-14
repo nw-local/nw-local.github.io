@@ -1,0 +1,26 @@
+---
+interface Props {
+  name: string
+  address: string
+  city: string
+  state: string
+  zip: string
+  website?: string
+  phone?: string
+  email?: string
+}
+
+const { name, address, city, state, zip, website, phone, email } = Astro.props
+---
+
+<div class="card">
+  <div class="card-body">
+    <h3>{name}</h3>
+    <p>{address}<br />{city}, {state} {zip}</p>
+    <div style="display:flex;flex-wrap:wrap;gap:1rem;margin-top:0.75rem;">
+      {website && <a href={website} target="_blank" rel="noopener">Website</a>}
+      {phone && <a href={`tel:${phone}`}>{phone}</a>}
+      {email && <a href={`mailto:${email}`}>Email</a>}
+    </div>
+  </div>
+</div>

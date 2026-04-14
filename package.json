@@ -12,10 +12,12 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^5.0.3",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
+    "@sanity/client": "^7.21.0",
+    "@sanity/image-url": "^2.1.1",
     "astro": "^6.1.4",
+    "astro-portabletext": "^0.13.0",
     "sharp": "^0.34.3"
   }
 }

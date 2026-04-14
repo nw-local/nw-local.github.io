@@ -1,0 +1,37 @@
+---
+interface Props {
+  settings: {
+    siteTitle?: string
+    logo?: { asset: { url: string }; alt?: string }
+  }
+}
+
+const { settings } = Astro.props
+const currentPath = Astro.url.pathname
+
+const NAV_LINKS = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/strains', label: 'Strains' },
+  { href: '/products', label: 'Products' },
+  { href: '/find-us', label: 'Find Us' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/contact', label: 'Contact' },
+]
+---
+
+<header>
+  <nav>
+    <a href="/" class="nav-logo">
+      {settings?.siteTitle ?? 'Northwest Local Cannabis'}
+    </a>
+    <div class="nav-links">
+      {NAV_LINKS.map((link) => (
+        <a href={link.href} class:list={[{ active: currentPath === link.href }]}>
+          {link.label}
+        </a>
+      ))}
+      <a href="/retailers" class="nav-retailers-cta">For Retailers</a>
+    </div>
+  </nav>
+</header>

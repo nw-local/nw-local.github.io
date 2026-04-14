@@ -1,49 +1,57 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import Layout from '../layouts/Layout.astro'
+import Hero from '../components/Hero.astro'
+import SectionHeading from '../components/SectionHeading.astro'
+import StrainCard from '../components/StrainCard.astro'
+import { getSiteSettings, getStrains, getPage } from '../lib/sanity'
+
+const settings = await getSiteSettings()
+const page = await getPage('home')
+const allStrains = await getStrains() ?? []
+const featuredStrains = allStrains.filter((strain: { featured: boolean }) => strain.featured)
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+<Layout
+  title={page?.title ?? settings?.siteTitle ?? 'Northwest Local Cannabis'}
+  description={page?.seoDescription ?? settings?.siteDescription ?? 'Washington State licensed cannabis producer and processor.'}
+>
+  <Hero
+    title="Grown Different."
+    subtitle="Washington State craft cannabis — from seed to shelf."
+  >
+    <div style="display:flex;gap:1rem;margin-top:1.5rem;">
+      <a href="/strains" class="nav-retailers-cta" style="text-decoration:none;font-size:0.85rem;padding:0.6rem 1.5rem;">
+        Explore Strains
+      </a>
+      <a href="/retailers" style="border:1px solid var(--border);color:var(--text-secondary);padding:0.6rem 1.5rem;font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;border-radius:4px;">
+        Wholesale
+      </a>
+    </div>
+  </Hero>
+
+  {featuredStrains.length > 0 && (
+    <section style="margin-top:3rem;">
+      <SectionHeading title="Featured Strains" />
+      <div class="card-grid">
+        {featuredStrains.map((strain) => (
+          <StrainCard {...strain} />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section style="margin-top:4rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+    <a href="/find-us" class="card" style="text-decoration:none;">
+      <div class="card-body" style="padding:2rem;">
+        <h3 style="text-transform:uppercase;letter-spacing:2px;">Find Our Products</h3>
+        <p>See which dispensaries carry Northwest Local Cannabis.</p>
+      </div>
+    </a>
+    <a href="/retailers" class="card" style="text-decoration:none;">
+      <div class="card-body" style="padding:2rem;">
+        <h3 style="text-transform:uppercase;letter-spacing:2px;">Partner With Us</h3>
+        <p>Interested in carrying our products? Get in touch.</p>
+      </div>
+    </a>
+  </section>
+</Layout>

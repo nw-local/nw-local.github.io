@@ -1,0 +1,23 @@
+---
+interface Props {
+  type: string
+  label?: string
+}
+
+const { type, label } = Astro.props
+
+const LABELS: Record<string, string> = {
+  indica: 'Indica',
+  sativa: 'Sativa',
+  hybrid: 'Hybrid',
+  flower: 'Flower',
+  preroll: 'Pre-Roll',
+  concentrate: 'Concentrate',
+  edible: 'Edible',
+  other: 'Other',
+}
+---
+
+<span class="product-badge" data-type={type}>
+  {label ?? LABELS[type] ?? type}
+</span>
