@@ -54,6 +54,7 @@ Add a new cannabis strain to the Northwest Local Cannabis catalog via Sanity MCP
 
 7. **Create in Sanity** — use MCP tools (`workspaceName: "nw-local"`) to create the strain document:
    - Include lineage and breeder info in the description as rich text with inline links (using Sanity block content `markDefs` for links)
+   - **Add a "Learn More" section** at the end of the description with bulleted links (`listItem: "bullet"`) to authoritative sources used during research (e.g., Leafly strain page, breeder site, awards/recognition). This helps SEO by linking to high-authority domains and signals well-researched content to search engines. Only include links that passed validation in step 3.
    - Attach uploaded image asset references to `heroImage` and `gallery` fields
    - Create as draft first
 
