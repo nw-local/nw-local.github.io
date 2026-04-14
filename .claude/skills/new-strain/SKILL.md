@@ -21,12 +21,13 @@ Add a new cannabis strain to the Northwest Local Cannabis catalog via Sanity MCP
 
 1. **Get strain name** (required) and **strain type** (indica, sativa, hybrid — required)
 
-2. **Auto-populate from the web:**
-   - Search for the strain name on Leafly / Allbud / similar cannabis databases
-   - Extract: description, effects, terpenes, THC range, CBD range
+2. **Research from multiple sources** (minimum 3 distinct sources):
+   - Search for the strain name on Leafly, Allbud, Weedmaps, SeedFinder, and similar databases
+   - **Read user reviews** on Leafly and other platforms — look for real consumer language about aroma, flavor, appearance, and effects. This is critical for writing original descriptions.
+   - Extract: effects, terpenes, THC range, CBD range from factual sources
    - **Always research lineage, genetics, and breeder** — identify the breeder/seed company, parent strains, and genetic lineage
    - Find the breeder's official website and verify the link loads successfully
-   - Use the search results to pre-fill all optional fields below
+   - Cross-reference facts across sources — if only one source mentions something, note the uncertainty
 
 3. **Validate all links:**
    - Use `WebFetch` to confirm every external URL (breeder sites, etc.) returns a valid response
@@ -53,6 +54,7 @@ Add a new cannabis strain to the Northwest Local Cannabis catalog via Sanity MCP
    - Parse the returned JSON to extract the asset `_id` for the document reference.
 
 7. **Create in Sanity** — use MCP tools (`workspaceName: "nw-local"`) to create the strain document:
+   - **Write original descriptions** — never copy phrases directly from any single source. Synthesize information from multiple sources and user reviews into NW Local's own voice. Descriptions should feel like they were written by someone who has smoked the strain, not pulled from a database. Use specific sensory details from user reviews (aroma, flavor, appearance, experience) rather than generic marketing language.
    - Include lineage and breeder info in the description as rich text with inline links (using Sanity block content `markDefs` for links)
    - **Add a "Learn More" section** at the end of the description with bulleted links (`listItem: "bullet"`) to authoritative sources used during research (e.g., Leafly strain page, breeder site, awards/recognition). This helps SEO by linking to high-authority domains and signals well-researched content to search engines. Only include links that passed validation in step 3.
    - Attach uploaded image asset references to `heroImage` and `gallery` fields
