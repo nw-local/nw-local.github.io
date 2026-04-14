@@ -41,7 +41,7 @@ Add a new cannabis strain to the Northwest Local Cannabis catalog via Sanity MCP
 
 5. **Prompt for images:**
    - Hero image (optional — ask user for a file path)
-     - **Clearly state the recommended dimensions: landscape 4:3, minimum 800×600 (ideally 1200×900)**
+     - **Clearly state the recommended dimensions: landscape 4:3, minimum 1200×900**
      - Explain that portrait images will be cropped on the strain page
    - Gallery images (optional — ask user for file paths, any aspect ratio is fine)
 

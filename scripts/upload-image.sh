@@ -31,7 +31,7 @@ if [[ "$DIMENSIONS" != "unknown" ]]; then
   echo "Image dimensions: ${IMG_WIDTH}×${IMG_HEIGHT}" >&2
   if (( IMG_HEIGHT > IMG_WIDTH )); then
     echo "⚠  Warning: Image is portrait orientation (${IMG_WIDTH}×${IMG_HEIGHT})." >&2
-    echo "   Hero images display best at landscape 4:3 (e.g., 800×600, 1200×900)." >&2
+    echo "   Hero images display best at landscape 4:3 (minimum 1200×900)." >&2
     echo "   Portrait images will be cropped on the strain page." >&2
   fi
 fi
