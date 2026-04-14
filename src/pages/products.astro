@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Hero from '../components/Hero.astro'
+import ProductCard from '../components/ProductCard.astro'
+import FilterBar from '../components/FilterBar.astro'
+import { getProducts } from '../lib/sanity'
+
+const products = await getProducts() ?? []
+
+const CATEGORY_FILTERS = [
+  { value: 'flower', label: 'Flower' },
+  { value: 'preroll', label: 'Pre-Rolls' },
+  { value: 'concentrate', label: 'Concentrates' },
+  { value: 'edible', label: 'Edibles' },
+]
+---
+
+<Layout title="Products" description="Browse all Northwest Local Cannabis products.">
+  <Hero title="Products" subtitle="Browse our full product lineup." />
+
+  <FilterBar filters={CATEGORY_FILTERS} />
+
+  <div class="card-grid">
+    {products.map((product: Record<string, unknown>) => (
+      <ProductCard {...product as any} />
+    ))}
+  </div>
+
+  {products.length === 0 && (
+    <p style="text-align:center;margin-top:2rem;">No products available yet. Check back soon.</p>
+  )}
+</Layout>
