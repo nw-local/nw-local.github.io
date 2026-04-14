@@ -1,0 +1,30 @@
+---
+interface Props {
+  email?: string
+  phone?: string
+  address?: string
+}
+
+const { email, phone, address } = Astro.props
+---
+
+<dl class="contact-info">
+  {email && (
+    <>
+      <dt>Email</dt>
+      <dd><a href={`mailto:${email}`}>{email}</a></dd>
+    </>
+  )}
+  {phone && (
+    <>
+      <dt>Phone</dt>
+      <dd><a href={`tel:${phone}`}>{phone}</a></dd>
+    </>
+  )}
+  {address && (
+    <>
+      <dt>Address</dt>
+      <dd set:html={address.replace(/\n/g, '<br />')} />
+    </>
+  )}
+</dl>
