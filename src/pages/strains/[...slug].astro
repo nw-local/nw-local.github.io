@@ -80,7 +80,7 @@ const products = await getProductsByStrain(strain._id) ?? []
     <section style="margin-bottom:3rem;">
       <SectionHeading title="Gallery" />
       <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));gap:1rem;">
-        {strain.gallery.map((image: { asset: { url: string }; alt?: string }) => (
+        {strain.gallery.map((image) => (
           <img
             src={urlFor(image).width(500).height(500).format('webp').url()}
             alt={image.alt ?? ''}
@@ -98,8 +98,8 @@ const products = await getProductsByStrain(strain._id) ?? []
     <section>
       <SectionHeading title="Products" />
       <div class="card-grid">
-        {products.map((product: Record<string, unknown>) => (
-          <ProductCard {...product as any} />
+        {products.map((product) => (
+          <ProductCard {...product} />
         ))}
       </div>
     </section>

@@ -21,9 +21,9 @@ const STRAIN_FILTERS = [
   <FilterBar filters={STRAIN_FILTERS} filterAttribute="data-strain-type" />
 
   <div class="card-grid">
-    {strains.map((strain: Record<string, unknown>) => (
-      <div data-strain-type={strain.strainType as string}>
-        <StrainCard {...strain as any} />
+    {strains.map((strain) => (
+      <div data-strain-type={strain.strainType}>
+        <StrainCard {...strain} />
       </div>
     ))}
   </div>

@@ -21,8 +21,8 @@ const CATEGORY_FILTERS = [
   <FilterBar filters={CATEGORY_FILTERS} />
 
   <div class="card-grid">
-    {products.map((product: Record<string, unknown>) => (
-      <ProductCard {...product as any} />
+    {products.map((product) => (
+      <ProductCard {...product} />
     ))}
   </div>
 

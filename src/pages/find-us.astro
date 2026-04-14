@@ -22,8 +22,8 @@ const sortedCities = Object.keys(retailersByCity).sort()
     <section style="margin-bottom:2.5rem;">
       <h3 style="text-transform:uppercase;letter-spacing:2px;font-size:1rem;color:var(--accent);margin-bottom:1rem;">{city}</h3>
       <div class="card-grid">
-        {retailersByCity[city].map((retailer: Record<string, unknown>) => (
-          <RetailerCard {...retailer as any} />
+        {retailersByCity[city].map((retailer) => (
+          <RetailerCard {...retailer} />
         ))}
       </div>
     </section>

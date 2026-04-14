@@ -11,8 +11,8 @@ const posts = await getBlogPosts() ?? []
   <Hero title="Blog" subtitle="News, new drops, and cannabis education." />
 
   <div class="card-grid">
-    {posts.map((post: Record<string, unknown>) => (
-      <BlogPostCard {...post as any} />
+    {posts.map((post) => (
+      <BlogPostCard {...post} />
     ))}
   </div>
 
