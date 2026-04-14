@@ -16,8 +16,8 @@ const featuredStrains = allStrains.filter((strain: { featured: boolean }) => str
   description={page?.seoDescription ?? settings?.siteDescription ?? 'Washington State licensed cannabis producer and processor.'}
 >
   <Hero
-    title="Grown Different."
-    subtitle="Washington State craft cannabis — from seed to shelf."
+    title={page?.title ?? settings?.siteTitle ?? 'Northwest Local Cannabis'}
+    subtitle={page?.seoDescription ?? settings?.siteDescription}
   >
     <div style="display:flex;gap:1rem;margin-top:1.5rem;">
       <a href="/strains" class="nav-retailers-cta" style="text-decoration:none;font-size:0.85rem;padding:0.6rem 1.5rem;">
