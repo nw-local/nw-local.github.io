@@ -1,14 +1,57 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import { getSiteSettings } from '../lib/sanity'
+import Hero from '../components/Hero.astro'
+import SectionHeading from '../components/SectionHeading.astro'
+import StrainCard from '../components/StrainCard.astro'
+import { getSiteSettings, getStrains, getPage } from '../lib/sanity'
 
 const settings = await getSiteSettings()
+const page = await getPage('home')
+const allStrains = await getStrains() ?? []
+const featuredStrains = allStrains.filter((strain: { featured: boolean }) => strain.featured)
 ---
 
 <Layout
-  title={settings?.siteTitle ?? 'Northwest Local Cannabis'}
-  description={settings?.siteDescription ?? 'Washington State licensed cannabis producer and processor.'}
+  title={page?.title ?? settings?.siteTitle ?? 'Northwest Local Cannabis'}
+  description={page?.seoDescription ?? settings?.siteDescription ?? 'Washington State licensed cannabis producer and processor.'}
 >
-  <h1>Northwest Local Cannabis</h1>
-  <p>Site under construction.</p>
+  <Hero
+    title="Grown Different."
+    subtitle="Washington State craft cannabis — from seed to shelf."
+  >
+    <div style="display:flex;gap:1rem;margin-top:1.5rem;">
+      <a href="/strains" class="nav-retailers-cta" style="text-decoration:none;font-size:0.85rem;padding:0.6rem 1.5rem;">
+        Explore Strains
+      </a>
+      <a href="/retailers" style="border:1px solid var(--border);color:var(--text-secondary);padding:0.6rem 1.5rem;font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;border-radius:4px;">
+        Wholesale
+      </a>
+    </div>
+  </Hero>
+
+  {featuredStrains.length > 0 && (
+    <section style="margin-top:3rem;">
+      <SectionHeading title="Featured Strains" />
+      <div class="card-grid">
+        {featuredStrains.map((strain: Record<string, unknown>) => (
+          <StrainCard {...strain as any} />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section style="margin-top:4rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+    <a href="/find-us" class="card" style="text-decoration:none;">
+      <div class="card-body" style="padding:2rem;">
+        <h3 style="text-transform:uppercase;letter-spacing:2px;">Find Our Products</h3>
+        <p>See which dispensaries carry Northwest Local Cannabis.</p>
+      </div>
+    </a>
+    <a href="/retailers" class="card" style="text-decoration:none;">
+      <div class="card-body" style="padding:2rem;">
+        <h3 style="text-transform:uppercase;letter-spacing:2px;">Partner With Us</h3>
+        <p>Interested in carrying our products? Get in touch.</p>
+      </div>
+    </a>
+  </section>
 </Layout>
