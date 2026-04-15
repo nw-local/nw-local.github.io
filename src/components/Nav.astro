@@ -41,7 +41,7 @@ const NAV_LINKS = [
     </a>
     <div class="nav-links">
       {NAV_LINKS.map( link => (
-        <a href={link.href} class:list={[ { active: currentPath === link.href } ]}>
+        <a href={link.href} class:list={[ { active: link.href === "/" ? currentPath === "/" : currentPath.startsWith( link.href ) } ]}>
           {link.label}
         </a>
       ) )}
