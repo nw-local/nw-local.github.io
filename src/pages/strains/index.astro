@@ -39,6 +39,7 @@ const TERPENE_FILTERS = allTerpenes.map( ( terpene: string ) => ({ value: terpen
     {TERPENE_FILTERS.length > 0 && (
       <FilterBar filters={TERPENE_FILTERS} filterAttribute="data-terpenes" matchMode="contains" label="Terpenes" externalControl />
     )}
+    <p id="strain-count" class="strain-count"></p>
   </div>
 
   <div class="card-grid" id="strain-grid">
@@ -73,6 +74,7 @@ const TERPENE_FILTERS = allTerpenes.map( ( terpene: string ) => ({ value: terpen
   const sortSelect = document.getElementById( "strain-sort" ) as HTMLSelectElement;
   const emptyMessage = document.getElementById( "strain-empty" )!;
   const paginationNav = document.getElementById( "strain-pagination" )!;
+  const countDisplay = document.getElementById( "strain-count" )!;
   const allCards = Array.from( grid.querySelectorAll<HTMLElement>( "[data-filter-item]" ) );
 
   let currentPage = 1;
@@ -173,6 +175,14 @@ const TERPENE_FILTERS = allTerpenes.map( ( terpene: string ) => ({ value: terpen
     sorted.forEach( card => grid.appendChild( card ) );
 
     emptyMessage.style.display = sorted.length === 0 ? "" : "none";
+
+    const total = allCards.length;
+    const showing = sorted.length;
+    countDisplay.textContent = showing === total
+      ? `${total} strain${total === 1 ? "" : "s"}`
+      : `${showing} of ${total} strains`;
+    countDisplay.style.display = total > 0 ? "" : "none";
+
     renderPagination( sorted.length );
   }
 

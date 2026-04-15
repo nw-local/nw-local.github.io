@@ -483,6 +483,13 @@ footer {
 
 .strain-search-input:focus {
   border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.15), 0 0 4px rgba(0, 255, 136, 0.1);
+  animation: search-glow 2s ease-in-out infinite;
+}
+
+@keyframes search-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(0, 255, 136, 0.1), 0 0 2px rgba(0, 255, 136, 0.08); }
+  50% { box-shadow: 0 0 16px rgba(0, 255, 136, 0.2), 0 0 6px rgba(0, 255, 136, 0.12); }
 }
 
 .strain-search-input::placeholder {
@@ -607,6 +614,14 @@ footer {
 .card-grid .fade-in:nth-child(5) { transition-delay: 0.15s; }
 .card-grid .fade-in:nth-child(6) { transition-delay: 0.25s; }
 
+
+/* Strain result counter */
+.strain-count {
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin: 0;
+}
+
 /* Subtle text glimmer on paragraphs */
 .portable-text p {
   animation: text-glimmer 4s ease-in-out infinite alternate;
@@ -638,6 +653,10 @@ footer {
 
   .card:hover {
     transform: none;
+  }
+
+  .strain-search-input:focus {
+    animation: none;
   }
 }
 
