@@ -49,7 +49,7 @@ const ogImage = strain.heroImage?.asset ? urlFor( strain.heroImage ).width( 1200
 
       {strain.effects && strain.effects.length > 0 && (
         <div style="margin-top:1.5rem;">
-          <h4 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:0.75rem;">Effects</h4>
+          <h2 class="detail-label">Effects</h2>
           <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
             {strain.effects.map( ( effect: string ) => (
               <span class="product-badge">{effect}</span>
@@ -60,7 +60,7 @@ const ogImage = strain.heroImage?.asset ? urlFor( strain.heroImage ).width( 1200
 
       {strain.terpenes && strain.terpenes.length > 0 && (
         <div style="margin-top:1.5rem;">
-          <h4 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:0.75rem;">Terpenes</h4>
+          <h2 class="detail-label">Terpenes</h2>
           <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
             {strain.terpenes.map( ( terpene: string ) => (
               <a href={`/terpenes/${terpene.toLowerCase()}`} class="product-badge terpene-link">{terpene}</a>

@@ -343,6 +343,7 @@ footer {
   padding: 1.25rem;
 }
 
+.card-body h2,
 .card-body h3 {
   font-size: 1.15rem;
   margin-bottom: 0.5rem;
@@ -370,6 +371,14 @@ footer {
 .product-badge[data-type="indica"] { background: #2a1f4e; color: #b89aff; }
 .product-badge[data-type="sativa"] { background: #1f3a1f; color: #88ff88; }
 .product-badge[data-type="hybrid"] { background: #3a2f1f; color: #ffcc66; }
+
+.detail-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
 
 .terpene-link {
   text-decoration: none;

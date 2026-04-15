@@ -6,14 +6,14 @@ import { getTerpenes } from "../../lib/sanity";
 const terpenes = await getTerpenes() ?? [];
 ---
 
-<Layout title="Terpenes" description="Learn about the terpenes found in our cannabis strains.">
+<Layout title="Terpenes" description="Learn about the terpenes that shape each cannabis strain's aroma, flavor, and effects. Explore myrcene, limonene, caryophyllene, and more.">
   <Hero title="Terpenes" subtitle="The aromatic compounds that shape each strain's flavor, aroma, and effects." />
 
   <div class="card-grid">
     {terpenes.map( terpene => (
       <a href={`/terpenes/${terpene.slug.current}`} class="card">
         <div class="card-body">
-          <h3>{terpene.name}</h3>
+          <h2 class="card-title">{terpene.name}</h2>
           {terpene.tagline && <p>{terpene.tagline}</p>}
           {terpene.aroma && terpene.aroma.length > 0 && (
             <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.75rem;">

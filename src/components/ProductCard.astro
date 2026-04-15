@@ -39,7 +39,7 @@ const displayImage = image ?? strain?.heroImage;
       {weight && <span class="product-badge">{weight}</span>}
       {!available && <span class="product-badge">Unavailable</span>}
     </div>
-    <h3>{name}</h3>
+    <h2 class="card-title">{name}</h2>
     {strain && (
       <p>
         <a href={`/strains/${strain.slug.current}`}>

@@ -1,0 +1,80 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - heading "Age Verification" [level=2] [ref=e4]
+    - paragraph [ref=e5]: You must be 21 years or older to view this site.
+    - button "I am 21 or older" [ref=e6] [cursor=pointer]
+    - link "I am under 21" [ref=e7] [cursor=pointer]:
+      - /url: https://www.google.com
+  - banner [ref=e8]:
+    - navigation [ref=e9]:
+      - link "Northwest Local Cannabis" [ref=e10] [cursor=pointer]:
+        - /url: /
+        - img "Northwest Local Cannabis" [ref=e11]
+      - generic [ref=e12]:
+        - link "Home" [ref=e13] [cursor=pointer]:
+          - /url: /
+        - link "About" [ref=e14] [cursor=pointer]:
+          - /url: /about
+        - link "Strains" [ref=e15] [cursor=pointer]:
+          - /url: /strains
+        - link "Products" [ref=e16] [cursor=pointer]:
+          - /url: /products
+        - link "Find Us" [ref=e17] [cursor=pointer]:
+          - /url: /find-us
+        - link "Blog" [ref=e18] [cursor=pointer]:
+          - /url: /blog
+        - link "Contact" [ref=e19] [cursor=pointer]:
+          - /url: /contact
+        - link "For Retailers" [ref=e20] [cursor=pointer]:
+          - /url: /retailers
+  - main [ref=e21]:
+    - generic [ref=e22]:
+      - heading "Our Strains" [level=1] [ref=e23]
+      - paragraph [ref=e25]: Craft genetics grown in Washington State.
+    - generic [ref=e26]:
+      - button "All" [ref=e27] [cursor=pointer]
+      - button "Indica" [ref=e28] [cursor=pointer]
+      - button "Sativa" [ref=e29] [cursor=pointer]
+      - button "Hybrid" [ref=e30] [cursor=pointer]
+    - generic [ref=e31]:
+      - link "Gastro Pop cannabis flower held in a gloved hand, showing dense purple buds coated in frosty trichomes with orange pistils, grown at Northwest Local Cannabis indoor facility Hybrid Gastro Pop Relaxed · Euphoric · Happy" [ref=e33] [cursor=pointer]:
+        - /url: /strains/gastro-pop
+        - img "Gastro Pop cannabis flower held in a gloved hand, showing dense purple buds coated in frosty trichomes with orange pistils, grown at Northwest Local Cannabis indoor facility" [ref=e35]
+        - generic [ref=e36]:
+          - generic [ref=e38]: Hybrid
+          - heading "Gastro Pop" [level=3] [ref=e39]
+          - paragraph [ref=e40]: Relaxed · Euphoric · Happy
+      - link "Super Boof cannabis flower showing dense purple and green buds covered in frosty trichomes with curling orange and white pistils, grown at Northwest Local Cannabis indoor facility Hybrid Super Boof Euphoric · Creative · Focused" [ref=e42] [cursor=pointer]:
+        - /url: /strains/super-boof
+        - img "Super Boof cannabis flower showing dense purple and green buds covered in frosty trichomes with curling orange and white pistils, grown at Northwest Local Cannabis indoor facility" [ref=e44]
+        - generic [ref=e45]:
+          - generic [ref=e47]: Hybrid
+          - heading "Super Boof" [level=3] [ref=e48]
+          - paragraph [ref=e49]: Euphoric · Creative · Focused
+  - contentinfo [ref=e50]:
+    - generic [ref=e51]:
+      - generic [ref=e52]:
+        - link "Home" [ref=e53] [cursor=pointer]:
+          - /url: /
+        - link "About" [ref=e54] [cursor=pointer]:
+          - /url: /about
+        - link "Strains" [ref=e55] [cursor=pointer]:
+          - /url: /strains
+        - link "Products" [ref=e56] [cursor=pointer]:
+          - /url: /products
+        - link "Find Us" [ref=e57] [cursor=pointer]:
+          - /url: /find-us
+        - link "Blog" [ref=e58] [cursor=pointer]:
+          - /url: /blog
+        - link "Contact" [ref=e59] [cursor=pointer]:
+          - /url: /contact
+        - link "For Retailers" [ref=e60] [cursor=pointer]:
+          - /url: /retailers
+      - generic [ref=e61]:
+        - link "benny@nw-local.com" [ref=e62] [cursor=pointer]:
+          - /url: mailto:benny@nw-local.com
+        - link "+1 (206) 353-9874" [ref=e63] [cursor=pointer]:
+          - /url: tel:+1 (206) 353-9874
+      - link "Instagram" [ref=e65] [cursor=pointer]:
+        - /url: https://www.instagram.com/northwest_local
+      - paragraph [ref=e66]: © 2026 Northwest Local Cannabis. All rights reserved.

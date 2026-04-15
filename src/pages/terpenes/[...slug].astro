@@ -43,7 +43,7 @@ const ogImage = terpene.heroImage?.asset ? urlFor( terpene.heroImage ).width( 12
 
       {terpene.aroma && terpene.aroma.length > 0 && (
         <div style="margin-top:1.5rem;">
-          <h4 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:0.75rem;">Aroma</h4>
+          <h2 class="detail-label">Aroma</h2>
           <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
             {terpene.aroma.map( ( note: string ) => (
               <span class="product-badge">{note}</span>
@@ -54,7 +54,7 @@ const ogImage = terpene.heroImage?.asset ? urlFor( terpene.heroImage ).width( 12
 
       {terpene.effects && terpene.effects.length > 0 && (
         <div style="margin-top:1.5rem;">
-          <h4 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:0.75rem;">Effects</h4>
+          <h2 class="detail-label">Effects</h2>
           <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
             {terpene.effects.map( ( effect: string ) => (
               <span class="product-badge">{effect}</span>
@@ -65,7 +65,7 @@ const ogImage = terpene.heroImage?.asset ? urlFor( terpene.heroImage ).width( 12
 
       {terpene.foundIn && terpene.foundIn.length > 0 && (
         <div style="margin-top:1.5rem;">
-          <h4 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:0.75rem;">Also Found In</h4>
+          <h2 class="detail-label">Also Found In</h2>
           <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
             {terpene.foundIn.map( ( item: string ) => (
               <span class="product-badge">{item}</span>

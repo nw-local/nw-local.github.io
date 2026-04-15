@@ -17,7 +17,7 @@ const allTerpenes = [ ...new Set( strains.flatMap( ( strain: { terpenes?: string
 const TERPENE_FILTERS = allTerpenes.map( ( terpene: string ) => ({ value: terpene.toLowerCase(), label: terpene }) );
 ---
 
-<Layout title="Strains" description="Explore our craft cannabis strains.">
+<Layout title="Strains" description="Explore craft cannabis strains from Northwest Local Cannabis. Filter by type and terpenes, search by name, and learn about each strain's genetics and effects.">
   <Hero title="Our Strains" subtitle="Craft genetics grown in Washington State." />
 
   <div class="strain-controls">
@@ -28,8 +28,9 @@ const TERPENE_FILTERS = allTerpenes.map( ( terpene: string ) => ({ value: terpen
         class="strain-search-input"
         placeholder="Search strains..."
         autocomplete="off"
+        aria-label="Search strains by name, effects, or terpenes"
       />
-      <select id="strain-sort" class="strain-sort-select">
+      <select id="strain-sort" class="strain-sort-select" aria-label="Sort strains">
         <option value="name-asc">Name (A–Z)</option>
         <option value="name-desc">Name (Z–A)</option>
       </select>
