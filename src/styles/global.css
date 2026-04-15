@@ -611,6 +611,7 @@ footer {
 .shimmer-wrap {
   position: relative;
   overflow: hidden;
+  line-height: 0;
 }
 
 .shimmer-wrap::after {
@@ -643,16 +644,16 @@ footer {
   background: linear-gradient(
     135deg,
     var(--text-primary) 0%,
-    var(--text-primary) 40%,
-    var(--accent) 50%,
-    var(--text-primary) 60%,
+    var(--text-primary) 42%,
+    #d4a843 50%,
+    var(--text-primary) 58%,
     var(--text-primary) 100%
   );
-  background-size: 300% 100%;
+  background-size: 400% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: title-shimmer 6s ease-in-out infinite;
+  animation: title-shimmer 8s ease-in-out infinite;
 }
 
 @keyframes title-shimmer {
