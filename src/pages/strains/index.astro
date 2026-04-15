@@ -1,7 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro'
 import Hero from '../../components/Hero.astro'
-import SectionHeading from '../../components/SectionHeading.astro'
 import StrainCard from '../../components/StrainCard.astro'
 import FilterBar from '../../components/FilterBar.astro'
 import { getStrains } from '../../lib/sanity'
@@ -21,20 +20,188 @@ const TERPENE_FILTERS = allTerpenes.map((terpene: string) => ({ value: terpene.t
 <Layout title="Strains" description="Explore our craft cannabis strains.">
   <Hero title="Our Strains" subtitle="Craft genetics grown in Washington State." />
 
-  <FilterBar filters={STRAIN_FILTERS} filterAttribute="data-strain-type" label="Type" />
-  {TERPENE_FILTERS.length > 0 && (
-    <FilterBar filters={TERPENE_FILTERS} filterAttribute="data-terpenes" matchMode="contains" label="Terpenes" />
-  )}
+  <div class="strain-controls">
+    <div class="strain-search-sort">
+      <input
+        type="text"
+        id="strain-search"
+        class="strain-search-input"
+        placeholder="Search strains..."
+        autocomplete="off"
+      />
+      <select id="strain-sort" class="strain-sort-select">
+        <option value="name-asc">Name (A–Z)</option>
+        <option value="name-desc">Name (Z–A)</option>
+      </select>
+    </div>
+    <FilterBar filters={STRAIN_FILTERS} filterAttribute="data-strain-type" label="Type" externalControl />
+    {TERPENE_FILTERS.length > 0 && (
+      <FilterBar filters={TERPENE_FILTERS} filterAttribute="data-terpenes" matchMode="contains" label="Terpenes" externalControl />
+    )}
+  </div>
 
-  <div class="card-grid">
+  <div class="card-grid" id="strain-grid">
     {strains.map((strain) => (
-      <div data-filter-item data-strain-type={strain.strainType} data-terpenes={strain.terpenes?.map((t: string) => t.toLowerCase()).join(',')}>
+      <div
+        data-filter-item
+        data-strain-type={strain.strainType}
+        data-terpenes={strain.terpenes?.map((t: string) => t.toLowerCase()).join(',')}
+        data-name={strain.name.toLowerCase()}
+        data-thc={strain.thcRange?.replace(/[^\d]/g, '').slice(0, 2) ?? '0'}
+        data-search={[strain.name, strain.strainType, ...(strain.effects ?? []), ...(strain.terpenes ?? [])].join(' ').toLowerCase()}
+      >
         <StrainCard {...strain} />
       </div>
     ))}
   </div>
 
+  <p id="strain-empty" style="text-align:center;margin-top:2rem;display:none;">No strains match your search.</p>
+
+  <nav id="strain-pagination" class="pagination" aria-label="Strain pages"></nav>
+
   {strains.length === 0 && (
     <p style="text-align:center;margin-top:2rem;">No strains available yet. Check back soon.</p>
   )}
 </Layout>
+
+<script>
+  const ITEMS_PER_PAGE = 12
+
+  const grid = document.getElementById('strain-grid')!
+  const searchInput = document.getElementById('strain-search') as HTMLInputElement
+  const sortSelect = document.getElementById('strain-sort') as HTMLSelectElement
+  const emptyMessage = document.getElementById('strain-empty')!
+  const paginationNav = document.getElementById('strain-pagination')!
+  const allCards = Array.from(grid.querySelectorAll<HTMLElement>('[data-filter-item]'))
+
+  let currentPage = 1
+
+  function getFilteredCards(): HTMLElement[] {
+    const searchTerm = searchInput.value.toLowerCase().trim()
+    const bars = document.querySelectorAll<HTMLElement>('.filter-bar')
+
+    return allCards.filter((card) => {
+      if (searchTerm) {
+        const searchData = card.getAttribute('data-search') ?? ''
+        if (!searchData.includes(searchTerm)) return false
+      }
+
+      let passesFilters = true
+      bars.forEach((bar) => {
+        const attribute = bar.dataset.filterAttribute ?? 'data-category'
+        const mode = bar.dataset.matchMode ?? 'exact'
+        const activeButton = bar.querySelector<HTMLButtonElement>('.filter-button.active')
+        const filterValue = activeButton?.dataset.filter ?? 'all'
+
+        if (filterValue === 'all') return
+
+        const cardValue = card.getAttribute(attribute) ?? ''
+        if (mode === 'contains') {
+          const values = cardValue.split(',').map((v) => v.trim().toLowerCase())
+          if (!values.includes(filterValue.toLowerCase())) passesFilters = false
+        } else {
+          if (cardValue !== filterValue) passesFilters = false
+        }
+      })
+
+      return passesFilters
+    })
+  }
+
+  function sortCards(cards: HTMLElement[]): HTMLElement[] {
+    const sortValue = sortSelect.value
+    return [...cards].sort((cardA, cardB) => {
+      if (sortValue === 'name-asc') {
+        return (cardA.dataset.name ?? '').localeCompare(cardB.dataset.name ?? '')
+      }
+      if (sortValue === 'name-desc') {
+        return (cardB.dataset.name ?? '').localeCompare(cardA.dataset.name ?? '')
+      }
+      const thcA = parseInt(cardA.dataset.thc ?? '0', 10)
+      const thcB = parseInt(cardB.dataset.thc ?? '0', 10)
+      if (sortValue === 'thc-desc') return thcB - thcA
+      if (sortValue === 'thc-asc') return thcA - thcB
+      return 0
+    })
+  }
+
+  function createPaginationButton(label: string, pageNumber: number, isActive: boolean): HTMLButtonElement {
+    const button = document.createElement('button')
+    button.className = 'pagination-button' + (isActive ? ' active' : '')
+    button.textContent = label
+    button.addEventListener('click', () => {
+      currentPage = pageNumber
+      applyAll()
+      window.scrollTo({ top: grid.offsetTop - 100, behavior: 'smooth' })
+    })
+    return button
+  }
+
+  function renderPagination(totalItems: number) {
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE)
+    paginationNav.replaceChildren()
+
+    if (totalPages <= 1) return
+
+    if (currentPage > 1) {
+      paginationNav.appendChild(createPaginationButton('\u00ab Prev', currentPage - 1, false))
+    }
+    for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
+      paginationNav.appendChild(createPaginationButton(String(pageNumber), pageNumber, pageNumber === currentPage))
+    }
+    if (currentPage < totalPages) {
+      paginationNav.appendChild(createPaginationButton('Next \u00bb', currentPage + 1, false))
+    }
+  }
+
+  function applyAll() {
+    const filtered = getFilteredCards()
+    const sorted = sortCards(filtered)
+    const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE)
+
+    if (currentPage > totalPages && totalPages > 0) currentPage = totalPages
+
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
+    const endIndex = startIndex + ITEMS_PER_PAGE
+    const visible = new Set(sorted.slice(startIndex, endIndex))
+
+    allCards.forEach((card) => {
+      card.style.display = visible.has(card) ? '' : 'none'
+    })
+
+    sorted.forEach((card) => grid.appendChild(card))
+
+    emptyMessage.style.display = sorted.length === 0 ? '' : 'none'
+    renderPagination(sorted.length)
+  }
+
+  // Event listeners
+  let searchTimeout: ReturnType<typeof setTimeout>
+  searchInput.addEventListener('input', () => {
+    clearTimeout(searchTimeout)
+    searchTimeout = setTimeout(() => {
+      currentPage = 1
+      applyAll()
+    }, 200)
+  })
+
+  sortSelect.addEventListener('change', () => {
+    currentPage = 1
+    applyAll()
+  })
+
+  document.querySelectorAll<HTMLElement>('.filter-bar').forEach((bar) => {
+    const buttons = bar.querySelectorAll<HTMLButtonElement>('.filter-button')
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        buttons.forEach((buttonElement) => buttonElement.classList.remove('active'))
+        button.classList.add('active')
+        currentPage = 1
+        applyAll()
+      })
+    })
+  })
+
+  // Initial render
+  applyAll()
+</script>

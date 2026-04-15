@@ -399,6 +399,86 @@ footer {
   background: rgba(0, 255, 136, 0.1);
 }
 
+/* --- Search & Sort --- */
+
+.strain-controls {
+  margin-bottom: 2rem;
+}
+
+.strain-search-sort {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.strain-search-input {
+  flex: 1;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.strain-search-input:focus {
+  border-color: var(--accent);
+}
+
+.strain-search-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.strain-sort-select {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.strain-sort-select:focus {
+  border-color: var(--accent);
+}
+
+/* --- Pagination --- */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.pagination-button {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.pagination-button:hover {
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
+}
+
+.pagination-button.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(0, 255, 136, 0.1);
+}
+
 /* --- Contact Info --- */
 
 .contact-info {
@@ -463,5 +543,9 @@ footer {
 
   .card-grid {
     grid-template-columns: 1fr;
+  }
+
+  .strain-search-sort {
+    flex-direction: column;
   }
 }

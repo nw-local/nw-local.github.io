@@ -4,12 +4,13 @@ interface Props {
   filterAttribute?: string
   matchMode?: 'exact' | 'contains'
   label?: string
+  externalControl?: boolean
 }
 
-const { filters, filterAttribute = 'data-category', matchMode = 'exact', label } = Astro.props
+const { filters, filterAttribute = 'data-category', matchMode = 'exact', label, externalControl = false } = Astro.props
 ---
 
-<div class="filter-bar" data-filter-attribute={filterAttribute} data-match-mode={matchMode}>
+<div class="filter-bar" data-filter-attribute={filterAttribute} data-match-mode={matchMode} data-external-control={externalControl ? 'true' : undefined}>
   {label && <span class="filter-label">{label}</span>}
   <button class="filter-button active" data-filter="all">All</button>
   {filters.map((filter) => (
@@ -23,7 +24,7 @@ const { filters, filterAttribute = 'data-category', matchMode = 'exact', label }
   function initFilterBars() {
     const container = new Map<Element, HTMLElement[]>()
 
-    document.querySelectorAll<HTMLElement>('.filter-bar').forEach((bar) => {
+    document.querySelectorAll<HTMLElement>('.filter-bar:not([data-external-control])').forEach((bar) => {
       const parent = bar.closest('main') ?? bar.parentElement
       if (!parent) return
       if (!container.has(parent)) {
@@ -59,7 +60,7 @@ const { filters, filterAttribute = 'data-category', matchMode = 'exact', label }
       })
     }
 
-    document.querySelectorAll<HTMLElement>('.filter-bar').forEach((bar) => {
+    document.querySelectorAll<HTMLElement>('.filter-bar:not([data-external-control])').forEach((bar) => {
       const parent = bar.closest('main') ?? bar.parentElement
       if (!parent) return
       const buttons = bar.querySelectorAll<HTMLButtonElement>('.filter-button')
