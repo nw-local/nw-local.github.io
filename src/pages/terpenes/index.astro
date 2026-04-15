@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import Hero from "../../components/Hero.astro";
 import { getTerpenes } from "../../lib/sanity";
+import { urlFor } from "../../lib/image";
 
 const terpenes = await getTerpenes() ?? [];
 ---
@@ -12,6 +13,17 @@ const terpenes = await getTerpenes() ?? [];
   <div class="card-grid">
     {terpenes.map( terpene => (
       <a href={`/terpenes/${terpene.slug.current}`} class="card">
+        {terpene.heroImage?.asset && (
+          <div class="card-image">
+            <img
+              src={urlFor( terpene.heroImage ).width( 600 ).height( 375 ).format( "webp" ).url()}
+              alt={terpene.heroImage.alt ?? terpene.name}
+              width="600"
+              height="375"
+              loading="lazy"
+            />
+          </div>
+        )}
         <div class="card-body">
           <h2 class="card-title">{terpene.name}</h2>
           {terpene.tagline && <p>{terpene.tagline}</p>}
