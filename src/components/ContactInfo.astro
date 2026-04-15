@@ -5,7 +5,7 @@ interface Props {
   address?: string
 }
 
-const { email, phone, address } = Astro.props
+const { email, phone, address } = Astro.props;
 ---
 
 <dl class="contact-info">
@@ -24,7 +24,7 @@ const { email, phone, address } = Astro.props
   {address && (
     <>
       <dt>Address</dt>
-      <dd set:html={address.replace(/\n/g, '<br />')} />
+      <dd set:html={address.replace( /\n/g, "<br />" )} />
     </>
   )}
 </dl>

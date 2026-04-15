@@ -3,8 +3,8 @@ interface Props {
   message?: string
 }
 
-const { message } = Astro.props
-const DEFAULT_MESSAGE = 'You must be 21 years or older to view this site.'
+const { message } = Astro.props;
+const DEFAULT_MESSAGE = "You must be 21 years or older to view this site.";
 ---
 
 <div id="age-gate" class="age-gate" style="display:none;">
@@ -17,28 +17,28 @@ const DEFAULT_MESSAGE = 'You must be 21 years or older to view this site.'
 </div>
 
 <script>
-  const AGE_GATE_KEY = 'nw-local-age-verified'
+  const AGE_GATE_KEY = "nw-local-age-verified";
 
   function initAgeGate() {
-    const gate = document.getElementById('age-gate')
-    const confirmButton = document.getElementById('age-gate-confirm')
+    const gate = document.getElementById( "age-gate" );
+    const confirmButton = document.getElementById( "age-gate-confirm" );
 
-    if (!gate || !confirmButton) return
+    if( !gate || !confirmButton ) return;
 
-    if (localStorage.getItem(AGE_GATE_KEY) === 'true') {
-      gate.style.display = 'none'
-      return
+    if( localStorage.getItem( AGE_GATE_KEY ) === "true" ) {
+      gate.style.display = "none";
+      return;
     }
 
-    gate.style.display = 'flex'
-    document.body.style.overflow = 'hidden'
+    gate.style.display = "flex";
+    document.body.style.overflow = "hidden";
 
-    confirmButton.addEventListener('click', () => {
-      localStorage.setItem(AGE_GATE_KEY, 'true')
-      gate.style.display = 'none'
-      document.body.style.overflow = ''
-    })
+    confirmButton.addEventListener( "click", () => {
+      localStorage.setItem( AGE_GATE_KEY, "true" );
+      gate.style.display = "none";
+      document.body.style.overflow = "";
+    });
   }
 
-  initAgeGate()
+  initAgeGate();
 </script>

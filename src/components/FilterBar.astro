@@ -2,78 +2,78 @@
 interface Props {
   filters: { value: string; label: string }[]
   filterAttribute?: string
-  matchMode?: 'exact' | 'contains'
+  matchMode?: "exact" | "contains"
   label?: string
   externalControl?: boolean
 }
 
-const { filters, filterAttribute = 'data-category', matchMode = 'exact', label, externalControl = false } = Astro.props
+const { filters, filterAttribute = "data-category", matchMode = "exact", label, externalControl = false } = Astro.props;
 ---
 
-<div class="filter-bar" data-filter-attribute={filterAttribute} data-match-mode={matchMode} data-external-control={externalControl ? 'true' : undefined}>
+<div class="filter-bar" data-filter-attribute={filterAttribute} data-match-mode={matchMode} data-external-control={externalControl ? "true" : undefined}>
   {label && <span class="filter-label">{label}</span>}
   <button class="filter-button active" data-filter="all">All</button>
-  {filters.map((filter) => (
+  {filters.map( filter => (
     <button class="filter-button" data-filter={filter.value}>
       {filter.label}
     </button>
-  ))}
+  ) )}
 </div>
 
 <script>
   function initFilterBars() {
-    const container = new Map<Element, HTMLElement[]>()
+    const container = new Map<Element, HTMLElement[]>();
 
-    document.querySelectorAll<HTMLElement>('.filter-bar:not([data-external-control])').forEach((bar) => {
-      const parent = bar.closest('main') ?? bar.parentElement
-      if (!parent) return
-      if (!container.has(parent)) {
-        const cardGrid = parent.querySelector('.card-grid')
-        const cards = Array.from(cardGrid?.querySelectorAll<HTMLElement>(':scope > [data-filter-item]') ?? [])
-        container.set(parent, cards)
+    document.querySelectorAll<HTMLElement>( ".filter-bar:not([data-external-control])" ).forEach( bar => {
+      const parent = bar.closest( "main" ) ?? bar.parentElement;
+      if( !parent ) return;
+      if( !container.has( parent ) ) {
+        const cardGrid = parent.querySelector( ".card-grid" );
+        const cards = Array.from( cardGrid?.querySelectorAll<HTMLElement>( ":scope > [data-filter-item]" ) ?? [] );
+        container.set( parent, cards );
       }
-    })
+    });
 
-    function applyFilters(parent: Element) {
-      const cards = container.get(parent) ?? []
-      const bars = parent.querySelectorAll<HTMLElement>('.filter-bar')
+    function applyFilters( parent: Element ) {
+      const cards = container.get( parent ) ?? [];
+      const bars = parent.querySelectorAll<HTMLElement>( ".filter-bar" );
 
-      cards.forEach((card) => {
-        let visible = true
-        bars.forEach((bar) => {
-          const attribute = bar.dataset.filterAttribute ?? 'data-category'
-          const mode = bar.dataset.matchMode ?? 'exact'
-          const activeButton = bar.querySelector<HTMLButtonElement>('.filter-button.active')
-          const filter = activeButton?.dataset.filter ?? 'all'
+      cards.forEach( card => {
+        let visible = true;
+        bars.forEach( bar => {
+          const attribute = bar.dataset.filterAttribute ?? "data-category";
+          const mode = bar.dataset.matchMode ?? "exact";
+          const activeButton = bar.querySelector<HTMLButtonElement>( ".filter-button.active" );
+          const filter = activeButton?.dataset.filter ?? "all";
 
-          if (filter === 'all') return
+          if( filter === "all" ) return;
 
-          const value = card.getAttribute(attribute) ?? ''
-          if (mode === 'contains') {
-            const values = value.split(',').map((v) => v.trim().toLowerCase())
-            if (!values.includes(filter.toLowerCase())) visible = false
+          const value = card.getAttribute( attribute ) ?? "";
+          if( mode === "contains" ) {
+            const values = value.split( "," ).map( v => v.trim().toLowerCase() );
+            if( !values.includes( filter.toLowerCase() ) ) visible = false;
           } else {
-            if (value !== filter) visible = false
+            if( value !== filter ) visible = false;
           }
-        })
-        card.style.display = visible ? '' : 'none'
-      })
+        });
+        card.style.display = visible ? "" : "none";
+      });
     }
 
-    document.querySelectorAll<HTMLElement>('.filter-bar:not([data-external-control])').forEach((bar) => {
-      const parent = bar.closest('main') ?? bar.parentElement
-      if (!parent) return
-      const buttons = bar.querySelectorAll<HTMLButtonElement>('.filter-button')
+    document.querySelectorAll<HTMLElement>( ".filter-bar:not([data-external-control])" ).forEach( bar => {
+      const parent = bar.closest( "main" ) ?? bar.parentElement;
+      if( !parent ) return;
+      const buttons = bar.querySelectorAll<HTMLButtonElement>( ".filter-button" );
 
-      buttons.forEach((button) => {
-        button.addEventListener('click', () => {
-          buttons.forEach((b) => b.classList.remove('active'))
-          button.classList.add('active')
-          applyFilters(parent)
-        })
-      })
-    })
+      buttons.forEach( button => {
+        button.addEventListener( "click", () => {
+          buttons.forEach( b => b.classList.remove( "active" ) );
+          button.classList.add( "active" );
+          applyFilters( parent );
+        });
+      });
+    });
   }
 
-  initFilterBars()
+  initFilterBars();
 </script>

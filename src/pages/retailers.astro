@@ -1,20 +1,20 @@
 ---
-import Layout from '../layouts/Layout.astro'
-import Hero from '../components/Hero.astro'
-import PortableText from '../components/PortableText.astro'
-import ContactInfo from '../components/ContactInfo.astro'
-import { getRetailerPage } from '../lib/sanity'
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import PortableText from "../components/PortableText.astro";
+import ContactInfo from "../components/ContactInfo.astro";
+import { getRetailerPage } from "../lib/sanity";
 
-const page = await getRetailerPage()
+const page = await getRetailerPage();
 ---
 
 <Layout title="For Retailers" description="Partner with Northwest Local Cannabis — wholesale info for dispensary buyers.">
-  <Hero title={page?.headline ?? 'For Retailers'} />
+  <Hero title={page?.headline ?? "For Retailers"} />
 
   <div style="max-width:var(--content-width);">
     {page?.intro && <PortableText value={page.intro} />}
 
-    {(page?.contactEmail || page?.contactPhone) && (
+    {( page?.contactEmail || page?.contactPhone ) && (
       <section style="margin-top:2rem;">
         <h3 style="text-transform:uppercase;letter-spacing:2px;font-size:0.85rem;color:var(--accent);margin-bottom:1rem;">Wholesale Inquiries</h3>
         <ContactInfo email={page.contactEmail} phone={page.contactPhone} />
@@ -25,13 +25,13 @@ const page = await getRetailerPage()
       <section style="margin-top:2rem;">
         <h3 style="text-transform:uppercase;letter-spacing:2px;font-size:0.85rem;color:var(--accent);margin-bottom:1rem;">Downloads</h3>
         <ul style="list-style:none;display:grid;gap:0.75rem;">
-          {page.downloadables.map((download: { label: string; url: string }) => (
+          {page.downloadables.map( ( download: { label: string; url: string }) => (
             <li>
               <a href={download.url} target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.5rem;">
                 {download.label}
               </a>
             </li>
-          ))}
+          ) )}
         </ul>
       </section>
     )}

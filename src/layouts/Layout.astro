@@ -1,9 +1,9 @@
 ---
-import BaseHead from '../components/BaseHead.astro'
-import Nav from '../components/Nav.astro'
-import Footer from '../components/Footer.astro'
-import AgeGate from '../components/AgeGate.astro'
-import { getSiteSettings } from '../lib/sanity'
+import BaseHead from "../components/BaseHead.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import AgeGate from "../components/AgeGate.astro";
+import { getSiteSettings } from "../lib/sanity";
 
 interface Props {
   title: string
@@ -11,8 +11,8 @@ interface Props {
   ogImage?: string
 }
 
-const { title, description, ogImage } = Astro.props
-const settings = await getSiteSettings()
+const { title, description, ogImage } = Astro.props;
+const settings = await getSiteSettings();
 ---
 
 <!doctype html>

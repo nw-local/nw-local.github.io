@@ -1,24 +1,24 @@
 ---
-import Layout from '../../layouts/Layout.astro'
-import Hero from '../../components/Hero.astro'
-import PortableText from '../../components/PortableText.astro'
-import StrainCard from '../../components/StrainCard.astro'
-import SectionHeading from '../../components/SectionHeading.astro'
-import { getTerpenes, getTerpene } from '../../lib/sanity'
-import { urlFor } from '../../lib/image'
+import Layout from "../../layouts/Layout.astro";
+import Hero from "../../components/Hero.astro";
+import PortableText from "../../components/PortableText.astro";
+import StrainCard from "../../components/StrainCard.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import { getTerpenes, getTerpene } from "../../lib/sanity";
+import { urlFor } from "../../lib/image";
 
 export async function getStaticPaths() {
-  const terpenes = await getTerpenes() ?? []
-  return terpenes.map((terpene: { slug: { current: string } }) => ({
+  const terpenes = await getTerpenes() ?? [];
+  return terpenes.map( ( terpene: { slug: { current: string } }) => ({
     params: { slug: terpene.slug.current },
-  }))
+  }) );
 }
 
-const { slug } = Astro.params
-const terpene = await getTerpene(slug!)
-if (!terpene) return Astro.redirect('/terpenes')
+const { slug } = Astro.params;
+const terpene = await getTerpene( slug! );
+if( !terpene ) return Astro.redirect( "/terpenes" );
 
-const ogImage = terpene.heroImage?.asset ? urlFor(terpene.heroImage).width(1200).height(630).format('jpg').url() : undefined
+const ogImage = terpene.heroImage?.asset ? urlFor( terpene.heroImage ).width( 1200 ).height( 630 ).format( "jpg" ).url() : undefined;
 ---
 
 <Layout title={terpene.name} description={terpene.tagline ?? `Learn about ${terpene.name}, a terpene found in Northwest Local Cannabis strains.`} ogImage={ogImage}>
@@ -30,7 +30,7 @@ const ogImage = terpene.heroImage?.asset ? urlFor(terpene.heroImage).width(1200)
     <div>
       {terpene.heroImage?.asset && (
         <img
-          src={urlFor(terpene.heroImage).width(1200).height(900).format('webp').url()}
+          src={urlFor( terpene.heroImage ).width( 1200 ).height( 900 ).format( "webp" ).url()}
           alt={terpene.heroImage.alt ?? terpene.name}
           width="1200"
           height="900"
@@ -45,9 +45,9 @@ const ogImage = terpene.heroImage?.asset ? urlFor(terpene.heroImage).width(1200)
         <div style="margin-top:1.5rem;">
           <h4 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:0.75rem;">Aroma</h4>
           <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
-            {terpene.aroma.map((note: string) => (
+            {terpene.aroma.map( ( note: string ) => (
               <span class="product-badge">{note}</span>
-            ))}
+            ) )}
           </div>
         </div>
       )}
@@ -56,9 +56,9 @@ const ogImage = terpene.heroImage?.asset ? urlFor(terpene.heroImage).width(1200)
         <div style="margin-top:1.5rem;">
           <h4 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:0.75rem;">Effects</h4>
           <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
-            {terpene.effects.map((effect: string) => (
+            {terpene.effects.map( ( effect: string ) => (
               <span class="product-badge">{effect}</span>
-            ))}
+            ) )}
           </div>
         </div>
       )}
@@ -67,9 +67,9 @@ const ogImage = terpene.heroImage?.asset ? urlFor(terpene.heroImage).width(1200)
         <div style="margin-top:1.5rem;">
           <h4 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:0.75rem;">Also Found In</h4>
           <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
-            {terpene.foundIn.map((item: string) => (
+            {terpene.foundIn.map( ( item: string ) => (
               <span class="product-badge">{item}</span>
-            ))}
+            ) )}
           </div>
         </div>
       )}
@@ -80,9 +80,9 @@ const ogImage = terpene.heroImage?.asset ? urlFor(terpene.heroImage).width(1200)
     <section>
       <SectionHeading title={`Strains with ${terpene.name}`} />
       <div class="card-grid">
-        {terpene.strains.map((strain) => (
+        {terpene.strains.map( strain => (
           <StrainCard {...strain} />
-        ))}
+        ) )}
       </div>
     </section>
   )}

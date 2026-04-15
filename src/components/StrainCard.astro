@@ -1,6 +1,6 @@
 ---
-import { urlFor } from '../lib/image'
-import ProductBadge from './ProductBadge.astro'
+import { urlFor } from "../lib/image";
+import ProductBadge from "./ProductBadge.astro";
 
 interface Props {
   name: string
@@ -11,14 +11,14 @@ interface Props {
   available: boolean
 }
 
-const { name, slug, strainType, effects, heroImage, available } = Astro.props
+const { name, slug, strainType, effects, heroImage, available } = Astro.props;
 ---
 
 <a href={`/strains/${slug.current}`} class="card">
   <div class="card-image">
     {heroImage?.asset && (
       <img
-        src={urlFor(heroImage).width(600).height(375).format('webp').url()}
+        src={urlFor( heroImage ).width( 600 ).height( 375 ).format( "webp" ).url()}
         alt={heroImage.alt ?? name}
         width="600"
         height="375"
@@ -33,7 +33,7 @@ const { name, slug, strainType, effects, heroImage, available } = Astro.props
     </div>
     <h3>{name}</h3>
     {effects && effects.length > 0 && (
-      <p>{effects.slice(0, 3).join(' · ')}</p>
+      <p>{effects.slice( 0, 3 ).join( " · " )}</p>
     )}
   </div>
 </a>

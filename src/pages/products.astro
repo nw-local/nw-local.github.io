@@ -1,18 +1,18 @@
 ---
-import Layout from '../layouts/Layout.astro'
-import Hero from '../components/Hero.astro'
-import ProductCard from '../components/ProductCard.astro'
-import FilterBar from '../components/FilterBar.astro'
-import { getProducts } from '../lib/sanity'
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import ProductCard from "../components/ProductCard.astro";
+import FilterBar from "../components/FilterBar.astro";
+import { getProducts } from "../lib/sanity";
 
-const products = await getProducts() ?? []
+const products = await getProducts() ?? [];
 
 const CATEGORY_FILTERS = [
-  { value: 'flower', label: 'Flower' },
-  { value: 'preroll', label: 'Pre-Rolls' },
-  { value: 'concentrate', label: 'Concentrates' },
-  { value: 'edible', label: 'Edibles' },
-]
+  { value: "flower", label: "Flower" },
+  { value: "preroll", label: "Pre-Rolls" },
+  { value: "concentrate", label: "Concentrates" },
+  { value: "edible", label: "Edibles" },
+];
 ---
 
 <Layout title="Products" description="Browse all Northwest Local Cannabis products.">
@@ -21,11 +21,11 @@ const CATEGORY_FILTERS = [
   <FilterBar filters={CATEGORY_FILTERS} />
 
   <div class="card-grid">
-    {products.map((product) => (
+    {products.map( product => (
       <div data-filter-item data-category={product.category}>
         <ProductCard {...product} />
       </div>
-    ))}
+    ) )}
   </div>
 
   {products.length === 0 && (

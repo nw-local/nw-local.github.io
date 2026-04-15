@@ -1,19 +1,19 @@
-import { createClient } from '@sanity/client'
+import { createClient } from "@sanity/client";
 
-const SANITY_PROJECT_ID = import.meta.env.SANITY_PROJECT_ID
-const SANITY_DATASET = import.meta.env.SANITY_DATASET
-const SANITY_API_TOKEN = import.meta.env.SANITY_API_TOKEN
+const SANITY_PROJECT_ID = import.meta.env.SANITY_PROJECT_ID;
+const SANITY_DATASET = import.meta.env.SANITY_DATASET;
+const SANITY_API_TOKEN = import.meta.env.SANITY_API_TOKEN;
 
-if (!SANITY_PROJECT_ID) throw new Error('Missing SANITY_PROJECT_ID env var')
-if (!SANITY_DATASET) throw new Error('Missing SANITY_DATASET env var')
+if( !SANITY_PROJECT_ID ) throw new Error( "Missing SANITY_PROJECT_ID env var" );
+if( !SANITY_DATASET ) throw new Error( "Missing SANITY_DATASET env var" );
 
 export const sanityClient = createClient({
   projectId: SANITY_PROJECT_ID,
   dataset: SANITY_DATASET,
-  apiVersion: '2026-04-14',
+  apiVersion: "2026-04-14",
   useCdn: false,
   token: SANITY_API_TOKEN,
-})
+});
 
 // --- Strains ---
 
@@ -24,11 +24,11 @@ export async function getStrains() {
       thcRange, cbdRange, nextHarvestDate,
       heroImage { asset->, alt, crop, hotspot },
       featured, available
-    }`
-  )
+    }`,
+  );
 }
 
-export async function getStrain(slug: string) {
+export async function getStrain( slug: string ) {
   return sanityClient.fetch(
     `*[_type == "strain" && slug.current == $slug][0] {
       _id, name, slug, strainType, description,
@@ -37,8 +37,8 @@ export async function getStrain(slug: string) {
       gallery[] { asset->, alt, crop, hotspot },
       featured, available
     }`,
-    { slug }
-  )
+    { slug },
+  );
 }
 
 // --- Terpenes ---
@@ -48,11 +48,11 @@ export async function getTerpenes() {
     `*[_type == "terpene"] | order(sortOrder asc, name asc) {
       _id, name, slug, tagline, aroma, effects, foundIn,
       heroImage { asset->, alt, crop, hotspot }
-    }`
-  )
+    }`,
+  );
 }
 
-export async function getTerpene(slug: string) {
+export async function getTerpene( slug: string ) {
   return sanityClient.fetch(
     `*[_type == "terpene" && slug.current == $slug][0] {
       _id, name, slug, tagline, aroma, effects, foundIn,
@@ -66,8 +66,8 @@ export async function getTerpene(slug: string) {
         heroImage { asset->, alt, crop, hotspot }
       }
     }`,
-    { slug }
-  )
+    { slug },
+  );
 }
 
 // --- Products ---
@@ -78,19 +78,19 @@ export async function getProducts() {
       _id, name, slug, category, weight, available,
       image { asset->, alt },
       "strain": strain->{ _id, name, slug, strainType, heroImage { asset->, alt, crop, hotspot } }
-    }`
-  )
+    }`,
+  );
 }
 
-export async function getProductsByStrain(strainId: string) {
+export async function getProductsByStrain( strainId: string ) {
   return sanityClient.fetch(
     `*[_type == "product" && strain._ref == $strainId] | order(sortOrder asc) {
       _id, name, slug, category, weight, available,
       image { asset->, alt },
       description
     }`,
-    { strainId }
-  )
+    { strainId },
+  );
 }
 
 // --- Blog ---
@@ -100,11 +100,11 @@ export async function getBlogPosts() {
     `*[_type == "blogPost"] | order(publishedAt desc) {
       _id, title, slug, description, publishedAt, tags,
       heroImage { asset->, alt, crop, hotspot }
-    }`
-  )
+    }`,
+  );
 }
 
-export async function getBlogPost(slug: string) {
+export async function getBlogPost( slug: string ) {
   return sanityClient.fetch(
     `*[_type == "blogPost" && slug.current == $slug][0] {
       _id, title, slug, description, publishedAt, tags,
@@ -114,8 +114,8 @@ export async function getBlogPost(slug: string) {
         _type == "image" => { asset->, alt, caption }
       }
     }`,
-    { slug }
-  )
+    { slug },
+  );
 }
 
 // --- Retailers ---
@@ -128,13 +128,13 @@ export async function getRetailers() {
       logo { asset->, alt },
       featured,
       productsAvailable[]->{ _id, name, slug, category }
-    }`
-  )
+    }`,
+  );
 }
 
 // --- Pages (singletons by pageId) ---
 
-export async function getPage(pageId: string) {
+export async function getPage( pageId: string ) {
   return sanityClient.fetch(
     `*[_type == "page" && pageId == $pageId][0] {
       _id, title, pageId, seoDescription,
@@ -144,8 +144,8 @@ export async function getPage(pageId: string) {
         _type == "image" => { asset->, alt, caption }
       }
     }`,
-    { pageId }
-  )
+    { pageId },
+  );
 }
 
 // --- Site Settings ---
@@ -158,8 +158,8 @@ export async function getSiteSettings() {
       socialLinks,
       contactEmail, contactPhone, address,
       ageGateMessage
-    }`
-  )
+    }`,
+  );
 }
 
 // --- Retailer Page ---
@@ -173,6 +173,6 @@ export async function getRetailerPage() {
       },
       contactEmail, contactPhone,
       "downloadables": downloadables[] { label, "url": file.asset->url }
-    }`
-  )
+    }`,
+  );
 }

@@ -1,26 +1,26 @@
 ---
-import Layout from '../../layouts/Layout.astro'
-import Hero from '../../components/Hero.astro'
-import PortableText from '../../components/PortableText.astro'
-import ProductBadge from '../../components/ProductBadge.astro'
-import ProductCard from '../../components/ProductCard.astro'
-import SectionHeading from '../../components/SectionHeading.astro'
-import { getStrains, getStrain, getProductsByStrain } from '../../lib/sanity'
-import { urlFor } from '../../lib/image'
+import Layout from "../../layouts/Layout.astro";
+import Hero from "../../components/Hero.astro";
+import PortableText from "../../components/PortableText.astro";
+import ProductBadge from "../../components/ProductBadge.astro";
+import ProductCard from "../../components/ProductCard.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import { getStrains, getStrain, getProductsByStrain } from "../../lib/sanity";
+import { urlFor } from "../../lib/image";
 
 export async function getStaticPaths() {
-  const strains = await getStrains() ?? []
-  return strains.map((strain: { slug: { current: string } }) => ({
+  const strains = await getStrains() ?? [];
+  return strains.map( ( strain: { slug: { current: string } }) => ({
     params: { slug: strain.slug.current },
-  }))
+  }) );
 }
 
-const { slug } = Astro.params
-const strain = await getStrain(slug!)
-if (!strain) return Astro.redirect('/strains')
+const { slug } = Astro.params;
+const strain = await getStrain( slug! );
+if( !strain ) return Astro.redirect( "/strains" );
 
-const products = await getProductsByStrain(strain._id) ?? []
-const ogImage = strain.heroImage?.asset ? urlFor(strain.heroImage).width(1200).height(630).format('jpg').url() : undefined
+const products = await getProductsByStrain( strain._id ) ?? [];
+const ogImage = strain.heroImage?.asset ? urlFor( strain.heroImage ).width( 1200 ).height( 630 ).format( "jpg" ).url() : undefined;
 ---
 
 <Layout title={strain.name} description={`${strain.name} — ${strain.strainType} cannabis strain by Northwest Local Cannabis.`} ogImage={ogImage}>
@@ -36,7 +36,7 @@ const ogImage = strain.heroImage?.asset ? urlFor(strain.heroImage).width(1200).h
     <div>
       {strain.heroImage?.asset && (
         <img
-          src={urlFor(strain.heroImage).width(1200).height(900).format('webp').url()}
+          src={urlFor( strain.heroImage ).width( 1200 ).height( 900 ).format( "webp" ).url()}
           alt={strain.heroImage.alt ?? strain.name}
           width="1200"
           height="900"
@@ -51,9 +51,9 @@ const ogImage = strain.heroImage?.asset ? urlFor(strain.heroImage).width(1200).h
         <div style="margin-top:1.5rem;">
           <h4 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:0.75rem;">Effects</h4>
           <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
-            {strain.effects.map((effect: string) => (
+            {strain.effects.map( ( effect: string ) => (
               <span class="product-badge">{effect}</span>
-            ))}
+            ) )}
           </div>
         </div>
       )}
@@ -62,16 +62,16 @@ const ogImage = strain.heroImage?.asset ? urlFor(strain.heroImage).width(1200).h
         <div style="margin-top:1.5rem;">
           <h4 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:0.75rem;">Terpenes</h4>
           <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
-            {strain.terpenes.map((terpene: string) => (
+            {strain.terpenes.map( ( terpene: string ) => (
               <a href={`/terpenes/${terpene.toLowerCase()}`} class="product-badge terpene-link">{terpene}</a>
-            ))}
+            ) )}
           </div>
         </div>
       )}
 
       {strain.nextHarvestDate && (
         <p style="margin-top:1.5rem;color:var(--accent);font-weight:600;">
-          Next harvest: {new Date(strain.nextHarvestDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+          Next harvest: {new Date( strain.nextHarvestDate ).toLocaleDateString( "en-US", { month: "long", year: "numeric" })}
         </p>
       )}
     </div>
@@ -81,16 +81,16 @@ const ogImage = strain.heroImage?.asset ? urlFor(strain.heroImage).width(1200).h
     <section style="margin-bottom:3rem;">
       <SectionHeading title="Gallery" />
       <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));gap:1rem;">
-        {strain.gallery.map((image) => (
+        {strain.gallery.map( image => (
           <img
-            src={urlFor(image).width(500).height(500).format('webp').url()}
-            alt={image.alt ?? ''}
+            src={urlFor( image ).width( 500 ).height( 500 ).format( "webp" ).url()}
+            alt={image.alt ?? ""}
             width="500"
             height="500"
             style="border-radius:8px;object-fit:cover;width:100%;aspect-ratio:1;"
             loading="lazy"
           />
-        ))}
+        ) )}
       </div>
     </section>
   )}
@@ -99,9 +99,9 @@ const ogImage = strain.heroImage?.asset ? urlFor(strain.heroImage).width(1200).h
     <section>
       <SectionHeading title="Products" />
       <div class="card-grid">
-        {products.map((product) => (
+        {products.map( product => (
           <ProductCard {...product} />
-        ))}
+        ) )}
       </div>
     </section>
   )}

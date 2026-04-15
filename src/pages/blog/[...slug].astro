@@ -1,26 +1,26 @@
 ---
-import Layout from '../../layouts/Layout.astro'
-import PortableText from '../../components/PortableText.astro'
-import { getBlogPosts, getBlogPost } from '../../lib/sanity'
-import { urlFor } from '../../lib/image'
+import Layout from "../../layouts/Layout.astro";
+import PortableText from "../../components/PortableText.astro";
+import { getBlogPosts, getBlogPost } from "../../lib/sanity";
+import { urlFor } from "../../lib/image";
 
 export async function getStaticPaths() {
-  const posts = await getBlogPosts() ?? []
-  return posts.map((post: { slug: { current: string } }) => ({
+  const posts = await getBlogPosts() ?? [];
+  return posts.map( ( post: { slug: { current: string } }) => ({
     params: { slug: post.slug.current },
-  }))
+  }) );
 }
 
-const { slug } = Astro.params
-const post = await getBlogPost(slug!)
-if (!post) return Astro.redirect('/blog')
+const { slug } = Astro.params;
+const post = await getBlogPost( slug! );
+if( !post ) return Astro.redirect( "/blog" );
 
-const formattedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-})
-const ogImage = post.heroImage?.asset ? urlFor(post.heroImage).width(1200).height(630).format('jpg').url() : undefined
+const formattedDate = new Date( post.publishedAt ).toLocaleDateString( "en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+const ogImage = post.heroImage?.asset ? urlFor( post.heroImage ).width( 1200 ).height( 630 ).format( "jpg" ).url() : undefined;
 ---
 
 <Layout title={post.title} description={post.description} ogImage={ogImage}>
@@ -33,17 +33,17 @@ const ogImage = post.heroImage?.asset ? urlFor(post.heroImage).width(1200).heigh
       <div class="hero-accent"></div>
       {post.tags && post.tags.length > 0 && (
         <div style="display:flex;gap:0.5rem;margin-top:1rem;">
-          {post.tags.map((tag: string) => (
+          {post.tags.map( ( tag: string ) => (
             <span class="product-badge">{tag}</span>
-          ))}
+          ) )}
         </div>
       )}
     </header>
 
     {post.heroImage?.asset && (
       <img
-        src={urlFor(post.heroImage).width(1200).height(600).format('webp').url()}
-        alt={post.heroImage.alt ?? ''}
+        src={urlFor( post.heroImage ).width( 1200 ).height( 600 ).format( "webp" ).url()}
+        alt={post.heroImage.alt ?? ""}
         width="1200"
         height="600"
         style="border-radius:8px;margin-bottom:2rem;width:100%;object-fit:cover;"

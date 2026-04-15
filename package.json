@@ -10,7 +10,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lint": "eslint .",
+    "format": "eslint --fix ."
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.18",
@@ -20,5 +22,12 @@
     "astro": "^6.1.4",
     "astro-portabletext": "^0.13.0",
     "sharp": "^0.34.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.2.0",
+    "eslint-plugin-astro": "^1.7.0",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.58.2"
   }
 }

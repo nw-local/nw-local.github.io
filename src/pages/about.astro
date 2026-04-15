@@ -1,23 +1,23 @@
 ---
-import Layout from '../layouts/Layout.astro'
-import Hero from '../components/Hero.astro'
-import PortableText from '../components/PortableText.astro'
-import { getPage } from '../lib/sanity'
-import { urlFor } from '../lib/image'
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import PortableText from "../components/PortableText.astro";
+import { getPage } from "../lib/sanity";
+import { urlFor } from "../lib/image";
 
-const page = await getPage('about')
+const page = await getPage( "about" );
 ---
 
 <Layout
-  title={page?.title ?? 'About'}
-  description={page?.seoDescription ?? 'About Northwest Local Cannabis.'}
+  title={page?.title ?? "About"}
+  description={page?.seoDescription ?? "About Northwest Local Cannabis."}
 >
-  <Hero title={page?.title ?? 'About Us'} />
+  <Hero title={page?.title ?? "About Us"} />
 
   {page?.heroImage?.asset && (
     <img
-      src={urlFor(page.heroImage).width(1200).height(500).format('webp').url()}
-      alt={page.heroImage.alt ?? ''}
+      src={urlFor( page.heroImage ).width( 1200 ).height( 500 ).format( "webp" ).url()}
+      alt={page.heroImage.alt ?? ""}
       width="1200"
       height="500"
       style="border-radius:8px;margin-bottom:2rem;object-fit:cover;width:100%;"

@@ -1,5 +1,5 @@
 ---
-import '../styles/global.css'
+import "../styles/global.css";
 
 interface Props {
   title: string
@@ -7,9 +7,9 @@ interface Props {
   ogImage?: string
 }
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site)
-const { title, description, ogImage } = Astro.props
-const resolvedOgImage = ogImage ?? new URL('/og-default.jpg', Astro.site).toString()
+const canonicalURL = new URL( Astro.url.pathname, Astro.site );
+const { title, description, ogImage } = Astro.props;
+const resolvedOgImage = ogImage ?? new URL( "/og-default.jpg", Astro.site ).toString();
 ---
 
 <meta charset="utf-8" />
