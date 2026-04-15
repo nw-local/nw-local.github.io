@@ -644,9 +644,9 @@ footer {
   background: linear-gradient(
     135deg,
     var(--text-primary) 0%,
-    var(--text-primary) 42%,
-    #d4a843 50%,
-    var(--text-primary) 58%,
+    var(--text-primary) 44%,
+    #e8dcc8 50%,
+    var(--text-primary) 56%,
     var(--text-primary) 100%
   );
   background-size: 400% 100%;
