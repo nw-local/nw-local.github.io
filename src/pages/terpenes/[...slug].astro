@@ -1,0 +1,89 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Hero from '../../components/Hero.astro'
+import PortableText from '../../components/PortableText.astro'
+import StrainCard from '../../components/StrainCard.astro'
+import SectionHeading from '../../components/SectionHeading.astro'
+import { getTerpenes, getTerpene } from '../../lib/sanity'
+import { urlFor } from '../../lib/image'
+
+export async function getStaticPaths() {
+  const terpenes = await getTerpenes() ?? []
+  return terpenes.map((terpene: { slug: { current: string } }) => ({
+    params: { slug: terpene.slug.current },
+  }))
+}
+
+const { slug } = Astro.params
+const terpene = await getTerpene(slug!)
+if (!terpene) return Astro.redirect('/terpenes')
+
+const ogImage = terpene.heroImage?.asset ? urlFor(terpene.heroImage).width(1200).height(630).format('jpg').url() : undefined
+---
+
+<Layout title={terpene.name} description={terpene.tagline ?? `Learn about ${terpene.name}, a terpene found in Northwest Local Cannabis strains.`} ogImage={ogImage}>
+  <Hero title={terpene.name}>
+    {terpene.tagline && <p style="color:var(--text-secondary);margin-top:0.5rem;font-size:1.1rem;">{terpene.tagline}</p>}
+  </Hero>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:3rem;">
+    <div>
+      {terpene.heroImage?.asset && (
+        <img
+          src={urlFor(terpene.heroImage).width(1200).height(900).format('webp').url()}
+          alt={terpene.heroImage.alt ?? terpene.name}
+          width="1200"
+          height="900"
+          style="border-radius:8px;width:100%;object-fit:cover;"
+        />
+      )}
+    </div>
+    <div>
+      {terpene.description && <PortableText value={terpene.description} />}
+
+      {terpene.aroma && terpene.aroma.length > 0 && (
+        <div style="margin-top:1.5rem;">
+          <h4 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:0.75rem;">Aroma</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+            {terpene.aroma.map((note: string) => (
+              <span class="product-badge">{note}</span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {terpene.effects && terpene.effects.length > 0 && (
+        <div style="margin-top:1.5rem;">
+          <h4 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:0.75rem;">Effects</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+            {terpene.effects.map((effect: string) => (
+              <span class="product-badge">{effect}</span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {terpene.foundIn && terpene.foundIn.length > 0 && (
+        <div style="margin-top:1.5rem;">
+          <h4 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:0.75rem;">Also Found In</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+            {terpene.foundIn.map((item: string) => (
+              <span class="product-badge">{item}</span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+
+  {terpene.strains && terpene.strains.length > 0 && (
+    <section>
+      <SectionHeading title={`Strains with ${terpene.name}`} />
+      <div class="card-grid">
+        {terpene.strains.map((strain) => (
+          <StrainCard {...strain} />
+        ))}
+      </div>
+    </section>
+  )}
+</Layout>

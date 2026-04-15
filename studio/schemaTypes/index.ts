@@ -6,6 +6,7 @@ import { retailerPageType } from './retailerPage'
 import { retailerType } from './retailer'
 import { siteSettingsType } from './siteSettings'
 import { strainType } from './strain'
+import { terpeneType } from './terpene'
 
 export const schemaTypes = [
   blockContentType,
@@ -16,4 +17,5 @@ export const schemaTypes = [
   retailerType,
   siteSettingsType,
   strainType,
+  terpeneType,
 ]

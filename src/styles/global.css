@@ -356,6 +356,17 @@ footer {
 .product-badge[data-type="sativa"] { background: #1f3a1f; color: #88ff88; }
 .product-badge[data-type="hybrid"] { background: #3a2f1f; color: #ffcc66; }
 
+.terpene-link {
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.terpene-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* --- Filter Bar --- */
 
 .filter-bar {

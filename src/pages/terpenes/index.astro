@@ -1,0 +1,33 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Hero from '../../components/Hero.astro'
+import { getTerpenes } from '../../lib/sanity'
+
+const terpenes = await getTerpenes() ?? []
+---
+
+<Layout title="Terpenes" description="Learn about the terpenes found in our cannabis strains.">
+  <Hero title="Terpenes" subtitle="The aromatic compounds that shape each strain's flavor, aroma, and effects." />
+
+  <div class="card-grid">
+    {terpenes.map((terpene) => (
+      <a href={`/terpenes/${terpene.slug.current}`} class="card">
+        <div class="card-body">
+          <h3>{terpene.name}</h3>
+          {terpene.tagline && <p>{terpene.tagline}</p>}
+          {terpene.aroma && terpene.aroma.length > 0 && (
+            <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.75rem;">
+              {terpene.aroma.map((note: string) => (
+                <span class="product-badge">{note}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      </a>
+    ))}
+  </div>
+
+  {terpenes.length === 0 && (
+    <p style="text-align:center;margin-top:2rem;">Terpene profiles coming soon.</p>
+  )}
+</Layout>

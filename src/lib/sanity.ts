@@ -41,6 +41,35 @@ export async function getStrain(slug: string) {
   )
 }
 
+// --- Terpenes ---
+
+export async function getTerpenes() {
+  return sanityClient.fetch(
+    `*[_type == "terpene"] | order(sortOrder asc, name asc) {
+      _id, name, slug, tagline, aroma, effects, foundIn,
+      heroImage { asset->, alt, crop, hotspot }
+    }`
+  )
+}
+
+export async function getTerpene(slug: string) {
+  return sanityClient.fetch(
+    `*[_type == "terpene" && slug.current == $slug][0] {
+      _id, name, slug, tagline, aroma, effects, foundIn,
+      description[] {
+        ...,
+        _type == "image" => { asset->, alt, caption }
+      },
+      heroImage { asset->, alt, crop, hotspot },
+      "strains": *[_type == "strain" && ^.name in terpenes] | order(name asc) {
+        _id, name, slug, strainType,
+        heroImage { asset->, alt, crop, hotspot }
+      }
+    }`,
+    { slug }
+  )
+}
+
 // --- Products ---
 
 export async function getProducts() {
