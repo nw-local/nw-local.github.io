@@ -291,6 +291,21 @@ footer {
   margin-top: 0.5rem;
 }
 
+/* --- Two-column detail layout --- */
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 769px) {
+  .detail-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 /* --- Cards (shared) --- */
 
 .card-grid {
