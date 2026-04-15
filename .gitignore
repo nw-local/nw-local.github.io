@@ -29,3 +29,6 @@ studio/dist/
 
 # brainstorming companion
 .superpowers/
+
+# playwright mcp artifacts
+.playwright-mcp/
