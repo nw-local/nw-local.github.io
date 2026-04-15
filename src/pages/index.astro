@@ -17,6 +17,7 @@ const featuredStrains = allStrains.filter( ( strain: { featured: boolean }) => s
 >
   <Hero
     title={page?.title ?? settings?.siteTitle ?? "Northwest Local Cannabis"}
+    titleClass="hero-title-glow"
     subtitle={page?.seoDescription ?? settings?.siteDescription}
   >
     <div style="display:flex;gap:1rem;margin-top:1.5rem;">
@@ -30,7 +31,7 @@ const featuredStrains = allStrains.filter( ( strain: { featured: boolean }) => s
   </Hero>
 
   {featuredStrains.length > 0 && (
-    <section style="margin-top:3rem;">
+    <section class="fade-in" style="margin-top:3rem;">
       <SectionHeading title="Featured Strains" />
       <div class="card-grid">
         {featuredStrains.map( strain => (
@@ -40,7 +41,7 @@ const featuredStrains = allStrains.filter( ( strain: { featured: boolean }) => s
     </section>
   )}
 
-  <section class="detail-grid" style="margin-top:4rem;">
+  <section class="detail-grid fade-in" style="margin-top:4rem;">
     <a href="/find-us" class="card" style="text-decoration:none;">
       <div class="card-body" style="padding:2rem;">
         <h3 style="text-transform:uppercase;letter-spacing:2px;">Find Our Products</h3>

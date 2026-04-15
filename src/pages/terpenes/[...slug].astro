@@ -77,7 +77,7 @@ const ogImage = terpene.heroImage?.asset ? urlFor( terpene.heroImage ).width( 12
   </div>
 
   {terpene.strains && terpene.strains.length > 0 && (
-    <section>
+    <section class="fade-in">
       <SectionHeading title={`Strains with ${terpene.name}`} />
       <div class="card-grid">
         {terpene.strains.map( strain => (

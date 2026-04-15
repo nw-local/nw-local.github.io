@@ -33,14 +33,14 @@ const ogImage = strain.heroImage?.asset ? urlFor( strain.heroImage ).width( 1200
   </Hero>
 
   <div class="detail-grid">
-    <div>
+    <div class="shimmer-wrap" style="border-radius:8px;">
       {strain.heroImage?.asset && (
         <img
           src={urlFor( strain.heroImage ).width( 1200 ).height( 900 ).format( "webp" ).url()}
           alt={strain.heroImage.alt ?? strain.name}
           width="1200"
           height="900"
-          style="border-radius:8px;width:100%;object-fit:cover;"
+          style="border-radius:8px;width:100%;object-fit:cover;display:block;"
         />
       )}
     </div>
@@ -78,7 +78,7 @@ const ogImage = strain.heroImage?.asset ? urlFor( strain.heroImage ).width( 1200
   </div>
 
   {strain.gallery && strain.gallery.length > 0 && (
-    <section style="margin-bottom:3rem;">
+    <section class="fade-in" style="margin-bottom:3rem;">
       <SectionHeading title="Gallery" />
       <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));gap:1rem;">
         {strain.gallery.map( image => (
@@ -96,7 +96,7 @@ const ogImage = strain.heroImage?.asset ? urlFor( strain.heroImage ).width( 1200
   )}
 
   {products.length > 0 && (
-    <section>
+    <section class="fade-in">
       <SectionHeading title="Products" />
       <div class="card-grid">
         {products.map( product => (
