@@ -64,4 +64,13 @@ Add a new cannabis strain to the Northwest Local Cannabis catalog via Sanity MCP
 
 9. **Publish** — use `publish_documents` to make the strain live
 
-10. **Report** — show the created document ID and a link to edit in Sanity Studio
+10. **Create missing terpene documents** — if the strain introduces terpenes that don't yet have a `terpene` document in Sanity, create them:
+    - Research the terpene (aroma, effects, where it's found in nature)
+    - Create the document with name, slug, tagline, aroma, effects, foundIn, and description
+    - **Generate a hero image** using `mcp__Sanity__generate_image` with this exact style prompt template:
+      `"Stylized flat illustration of [natural sources] in a modern animated style. Bold colors, clean lines, minimal shading, dark background. Digital art, no text, no photorealism."`
+      Replace `[natural sources]` with the terpene's `foundIn` items (e.g., "mangoes and hops" for myrcene, "lavender sprigs and sweet basil" for linalool). This maintains visual consistency across all terpene pages.
+    - Always use `workspaceName: "nw-local"` for the generate_image call
+    - Publish the terpene document after the image generates
+
+11. **Report** — show the created document ID and a link to edit in Sanity Studio
