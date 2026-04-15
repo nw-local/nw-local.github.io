@@ -620,17 +620,17 @@ footer {
   position: absolute;
   top: 0;
   left: -100%;
-  width: 60%;
+  width: 120%;
   height: 100%;
   background: linear-gradient(
     105deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.04) 45%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.04) 55%,
-    transparent 70%
+    transparent 20%,
+    rgba(255, 255, 255, 0.02) 35%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.02) 65%,
+    transparent 80%
   );
-  animation: shimmer 8s ease-in-out infinite;
+  animation: shimmer 10s ease-in-out infinite;
   pointer-events: none;
 }
 
