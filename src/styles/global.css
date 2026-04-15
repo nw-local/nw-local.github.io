@@ -131,6 +131,17 @@ header nav {
   background: var(--accent-hover);
 }
 
+.nav-instagram {
+  display: flex;
+  align-items: center;
+  color: var(--text-secondary) !important;
+  transition: color 0.2s !important;
+}
+
+.nav-instagram:hover {
+  color: var(--accent) !important;
+}
+
 /* --- Footer --- */
 
 footer {

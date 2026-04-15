@@ -5,6 +5,9 @@ interface Props {
   settings: {
     siteTitle?: string
     logo?: { asset: { url: string }; alt?: string }
+    socialLinks?: {
+      instagram?: string
+    }
   }
 }
 
@@ -43,6 +46,15 @@ const NAV_LINKS = [
         </a>
       ) )}
       <a href="/retailers" class="nav-retailers-cta">For Retailers</a>
+      {settings?.socialLinks?.instagram && (
+        <a href={settings.socialLinks.instagram} target="_blank" rel="noopener" class="nav-instagram" aria-label="Follow us on Instagram">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <circle cx="12" cy="12" r="5"></circle>
+            <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"></circle>
+          </svg>
+        </a>
+      )}
     </div>
   </nav>
 </header>
