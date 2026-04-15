@@ -33,14 +33,14 @@ const ogImage = strain.heroImage?.asset ? urlFor( strain.heroImage ).width( 1200
   </Hero>
 
   <div class="detail-grid">
-    <div class="shimmer-wrap" style="border-radius:8px;">
+    <div>
       {strain.heroImage?.asset && (
         <img
           src={urlFor( strain.heroImage ).width( 1200 ).height( 900 ).format( "webp" ).url()}
           alt={strain.heroImage.alt ?? strain.name}
           width="1200"
           height="900"
-          style="border-radius:8px;width:100%;object-fit:cover;display:block;"
+          style="border-radius:8px;width:100%;object-fit:cover;"
         />
       )}
     </div>

@@ -607,60 +607,15 @@ footer {
 .card-grid .fade-in:nth-child(5) { transition-delay: 0.15s; }
 .card-grid .fade-in:nth-child(6) { transition-delay: 0.25s; }
 
-/* Trichome shimmer on strain hero images */
-.shimmer-wrap {
-  position: relative;
-  overflow: hidden;
-  line-height: 0;
-  align-self: start;
+/* Subtle text glimmer on paragraphs */
+.portable-text p {
+  animation: text-glimmer 4s ease-in-out infinite alternate;
 }
 
-.shimmer-wrap::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 80%;
-  height: 100%;
-  background: linear-gradient(
-    105deg,
-    transparent 25%,
-    rgba(255, 255, 255, 0.04) 40%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.04) 60%,
-    transparent 75%
-  );
-  animation: shimmer 10s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes shimmer {
-  0% { left: -100%; }
-  40% { left: 120%; }
-  100% { left: 120%; }
-}
-
-/* Homepage hero title gradient */
-.hero-title-glow {
-  background: linear-gradient(
-    135deg,
-    var(--text-primary) 0%,
-    var(--text-primary) 44%,
-    #e8dcc8 50%,
-    var(--text-primary) 56%,
-    var(--text-primary) 100%
-  );
-  background-size: 400% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: title-shimmer 8s ease-in-out infinite;
-}
-
-@keyframes title-shimmer {
-  0% { background-position: 100% 0; }
-  50% { background-position: 0 0; }
-  100% { background-position: 100% 0; }
+@keyframes text-glimmer {
+  0% { text-shadow: 0 0 0 transparent; }
+  50% { text-shadow: 0 0 2px rgba(255, 255, 255, 0.04); }
+  100% { text-shadow: 0 0 0 transparent; }
 }
 
 /* Respect reduced motion preference */
@@ -671,10 +626,9 @@ footer {
     transition: none;
   }
 
-  .shimmer-wrap::after,
-  .hero-title-glow,
   .hero-accent,
-  .nav-logo-image {
+  .nav-logo-image,
+  .portable-text p {
     animation: none;
   }
 
