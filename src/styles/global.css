@@ -612,6 +612,7 @@ footer {
   position: relative;
   overflow: hidden;
   line-height: 0;
+  align-self: start;
 }
 
 .shimmer-wrap::after {
