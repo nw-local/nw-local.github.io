@@ -99,9 +99,10 @@ const lightboxImages = (strain.gallery ?? []).map((image: { asset: unknown; alt?
           />
         ))}
       </div>
-      <ImageLightbox images={lightboxImages} />
     </section>
   )}
+
+  <ImageLightbox images={lightboxImages} />
 
   {products.length > 0 && (
     <section class="fade-in">
