@@ -22,7 +22,7 @@ upload-image:
 	@./scripts/upload-image.sh "$(FILE)" "$(LABEL)" "$(DESCRIPTION)"
 
 prep-images:
-	@./scripts/prep-images.sh "$(DIR)" "$(STRAIN)"
+	@./scripts/prep-images.sh "$(DIR)" "$(STRAIN)" "$(RENAME)"
 
 lint:
 	yarn lint

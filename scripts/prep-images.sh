@@ -4,11 +4,13 @@
 #
 # Usage:
 #   make prep-images DIR=path/to/images STRAIN="Strain Name"
+#   make prep-images DIR=path/to/images STRAIN="Strain Name" RENAME="IMG_3559.HEIC:bud-closeup,IMG_3561.HEIC:trichome-detail"
 
 set -euo pipefail
 
 DIR="${1:?Usage: prep-images.sh <directory> <strain-name>}"
 STRAIN="${2:?Usage: prep-images.sh <directory> <strain-name>}"
+RENAME="${3:-}"
 
 if [[ ! -d "$DIR" ]]; then
   echo "Error: directory not found: $DIR" >&2
@@ -27,10 +29,38 @@ slugify() {
 SLUG=$(slugify "$STRAIN")
 PROCESSED_DIR="${DIR%/}/_processed"
 
+# Parse RENAME mappings into parallel arrays: RENAME_FROM[i] → RENAME_TO[i]
+RENAME_FROM=()
+RENAME_TO=()
+if [[ -n "$RENAME" ]]; then
+  IFS=',' read -ra PAIRS <<< "$RENAME"
+  for pair in "${PAIRS[@]}"; do
+    FROM="${pair%%:*}"
+    TO="${pair#*:}"
+    RENAME_FROM+=("$FROM")
+    RENAME_TO+=("$TO")
+  done
+fi
+
+# Look up a rename mapping for a given filename; returns the new stem or empty string
+lookup_rename() {
+  local filename="$1"
+  for index in "${!RENAME_FROM[@]}"; do
+    if [[ "${RENAME_FROM[$index]}" == "$filename" ]]; then
+      echo "${RENAME_TO[$index]}"
+      return
+    fi
+  done
+  echo ""
+}
+
 echo "Strain: $STRAIN"
 echo "Slug:   $SLUG"
 echo "Source: $DIR"
 echo "Output: $PROCESSED_DIR"
+if [[ ${#RENAME_FROM[@]} -gt 0 ]]; then
+  echo "Renames: ${#RENAME_FROM[@]} mapping(s)"
+fi
 echo ""
 
 # Find image files (case-insensitive), skip _processed/
@@ -58,8 +88,13 @@ mkdir -p "$PROCESSED_DIR"
 PROCESSED_FILES=()
 for img in "${IMAGES[@]}"; do
   BASENAME=$(basename "$img")
-  STEM="${BASENAME%.*}"
-  STEM_SLUG=$(slugify "$STEM")
+  RENAMED=$(lookup_rename "$BASENAME")
+  if [[ -n "$RENAMED" ]]; then
+    STEM_SLUG=$(slugify "$RENAMED")
+  else
+    STEM="${BASENAME%.*}"
+    STEM_SLUG=$(slugify "$STEM")
+  fi
   OUTPUT_NAME="${SLUG}-${STEM_SLUG}.jpg"
   OUTPUT_PATH="${PROCESSED_DIR}/${OUTPUT_NAME}"
 

@@ -43,7 +43,10 @@ Add a new cannabis strain to the Northwest Local Cannabis catalog via Sanity MCP
 
 5. **Prompt for images:**
    - Ask if the user has a **directory** of images or **individual file paths**
-   - **If directory:** suggest running `make prep-images DIR="<path>" STRAIN="<name>"` first
+   - **If directory:**
+     - The user should pre-name their hero image with a descriptive filename (e.g., `hero.heic`, `donny-burger-hero.jpg`)
+     - **Look at the remaining images** (Claude is multimodal) and generate SEO-friendly descriptive stems for each (e.g., `bud-closeup`, `trichome-detail`, `dense-frosty-nug`)
+     - Run `make prep-images DIR="<path>" STRAIN="<name>" RENAME="IMG_3559.HEIC:bud-closeup,IMG_3561.HEIC:trichome-detail"` with the rename mappings
      - Show the output (conversion results + dedup check)
      - For each NEW (non-duplicate) file in `_processed/`, proceed to upload via `make upload-image`
      - Skip any files flagged as duplicates
