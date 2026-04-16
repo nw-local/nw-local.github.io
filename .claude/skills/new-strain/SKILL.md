@@ -16,15 +16,16 @@ Add a new cannabis strain to the Northwest Local Cannabis catalog via Sanity MCP
 
 - **Workspace name**: Always use `workspaceName: "nw-local"` for all Sanity MCP calls.
 - **SANITY_WRITE_TOKEN**: Image uploads use `make upload-image`, which requires `SANITY_WRITE_TOKEN` in `.env` (separate from the read-only `SANITY_API_TOKEN`).
+- **Never use `source .env`**: Always run scripts via their `make` targets (e.g., `make upload-image`, `make prep-images`) — the Makefile loads `.env` automatically.
 
 ## Workflow
 
-1. **Get strain name** (required) and **strain type** (indica, sativa, hybrid — required)
+1. **Get strain name** (required) — strain type is determined via research in the next step, not asked from the user
 
 2. **Research from multiple sources** (minimum 3 distinct sources):
    - Search for the strain name on Leafly, Allbud, Weedmaps, SeedFinder, and similar databases
    - **Read user reviews** on Leafly and other platforms — look for real consumer language about aroma, flavor, appearance, and effects. This is critical for writing original descriptions.
-   - Extract: effects, terpenes, THC range, CBD range from factual sources
+   - Extract: **strain type** (indica, sativa, hybrid), effects, terpenes, THC range, CBD range from factual sources
    - **Always research lineage, genetics, and breeder** — identify the breeder/seed company, parent strains, and genetic lineage
    - Find the breeder's official website and verify the link loads successfully
    - Cross-reference facts across sources — if only one source mentions something, note the uncertainty
@@ -41,6 +42,12 @@ Add a new cannabis strain to the Northwest Local Cannabis catalog via Sanity MCP
    - Wait for explicit user approval before proceeding
 
 5. **Prompt for images:**
+   - Ask if the user has a **directory** of images or **individual file paths**
+   - **If directory:** suggest running `make prep-images DIR="<path>" STRAIN="<name>"` first
+     - Show the output (conversion results + dedup check)
+     - For each NEW (non-duplicate) file in `_processed/`, proceed to upload via `make upload-image`
+     - Skip any files flagged as duplicates
+   - **If individual files:** proceed directly to upload
    - Hero image (optional — ask user for a file path)
      - **Clearly state the recommended dimensions: landscape 4:3, minimum 1200×900**
      - Explain that portrait images will be cropped on the strain page
@@ -60,11 +67,13 @@ Add a new cannabis strain to the Northwest Local Cannabis catalog via Sanity MCP
    - Attach uploaded image asset references to `heroImage` and `gallery` fields
    - Create as draft first
 
-8. **Show final preview** — render the draft content as readable markdown one more time for confirmation before publishing
+8. **Ask if featured** — before publishing, ask the user if this strain should be marked as **featured** (appears prominently on the site). Default to `false` if the user declines.
 
-9. **Publish** — use `publish_documents` to make the strain live
+9. **Show final preview** — render the draft content as readable markdown one more time for confirmation before publishing
 
-10. **Create missing terpene documents** — if the strain introduces terpenes that don't yet have a `terpene` document in Sanity, create them:
+10. **Publish** — use `publish_documents` to make the strain live
+
+11. **Create missing terpene documents** — if the strain introduces terpenes that don't yet have a `terpene` document in Sanity, create them:
     - Research the terpene (aroma, effects, where it's found in nature)
     - Create the document with name, slug, tagline, aroma, effects, foundIn, and description
     - **Generate a hero image** using `mcp__Sanity__generate_image` with this exact style prompt template:
@@ -73,4 +82,4 @@ Add a new cannabis strain to the Northwest Local Cannabis catalog via Sanity MCP
     - Always use `workspaceName: "nw-local"` for the generate_image call
     - Publish the terpene document after the image generates
 
-11. **Report** — show the created document ID and a link to edit in Sanity Studio
+12. **Report** — show the created document ID and a link to edit in Sanity Studio

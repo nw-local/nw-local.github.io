@@ -1,7 +1,7 @@
 -include .env
 export
 
-.PHONY: dev build preview studio deploy-studio upload-image lint format
+.PHONY: dev build preview studio deploy-studio upload-image prep-images lint format
 
 dev:
 	yarn dev

@@ -8,7 +8,7 @@ Customer-facing website for **Northwest Local Cannabis**, a Washington State i50
 
 ## Commands
 
-Use `make` targets — they load `.env` automatically via `-include .env` + `export`.
+Use `make` targets — they load `.env` automatically via `-include .env` + `export`. **Never use `source .env` to run scripts directly** — always use the corresponding `make` target so env vars are loaded consistently.
 
 | Task | Command |
 |------|---------|
