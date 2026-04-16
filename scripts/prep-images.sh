@@ -78,3 +78,53 @@ done
 
 echo ""
 echo "Processed ${#PROCESSED_FILES[@]} file(s) to $PROCESSED_DIR"
+
+echo ""
+echo "Checking for duplicates in Sanity..."
+echo ""
+
+: "${SANITY_PROJECT_ID:?SANITY_PROJECT_ID is required}"
+: "${SANITY_DATASET:?SANITY_DATASET is required}"
+: "${SANITY_API_TOKEN:?SANITY_API_TOKEN is required}"
+
+urlencode() {
+  python3 -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))" "$1"
+}
+
+parse_json_field() {
+  python3 -c "
+import json, sys
+data = json.loads(sys.stdin.read())
+result = data.get('result')
+if result and isinstance(result, dict):
+    print(result.get(sys.argv[1], ''))
+" "$1"
+}
+
+NEW_COUNT=0
+DUP_COUNT=0
+
+for file in "${PROCESSED_FILES[@]}"; do
+  FILENAME=$(basename "$file")
+  HASH=$(shasum "$file" | awk '{print $1}')
+
+  QUERY=$(urlencode "*[_type == \"sanity.imageAsset\" && sha1hash == \"${HASH}\"][0]{_id, label, originalFilename}")
+
+  RESPONSE=$(curl --silent --fail \
+    -H "Authorization: Bearer ${SANITY_API_TOKEN}" \
+    "https://${SANITY_PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${SANITY_DATASET}?query=${QUERY}")
+
+  ASSET_ID=$(echo "$RESPONSE" | parse_json_field "_id")
+
+  if [[ -n "$ASSET_ID" ]]; then
+    ASSET_LABEL=$(echo "$RESPONSE" | parse_json_field "label")
+    echo "  SKIP (duplicate): $FILENAME → already uploaded as $ASSET_ID${ASSET_LABEL:+ ($ASSET_LABEL)}"
+    DUP_COUNT=$((DUP_COUNT + 1))
+  else
+    echo "  NEW: $FILENAME"
+    NEW_COUNT=$((NEW_COUNT + 1))
+  fi
+done
+
+echo ""
+echo "Summary: $((NEW_COUNT + DUP_COUNT)) files processed — $NEW_COUNT new, $DUP_COUNT duplicate(s)"

@@ -21,6 +21,9 @@ deploy-studio:
 upload-image:
 	@./scripts/upload-image.sh "$(FILE)" "$(LABEL)" "$(DESCRIPTION)"
 
+prep-images:
+	@./scripts/prep-images.sh "$(DIR)" "$(STRAIN)"
+
 lint:
 	yarn lint
 
