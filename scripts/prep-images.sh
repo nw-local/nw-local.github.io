@@ -114,8 +114,55 @@ done
 echo ""
 echo "Processed ${#PROCESSED_FILES[@]} file(s) to $PROCESSED_DIR"
 
+# Local dedup: if _processed/ has files with the same content (SHA-1) as newly
+# processed files (e.g., renamed version from a previous run), keep the newest.
 echo ""
-echo "Checking for duplicates in Sanity..."
+echo "Deduplicating _processed/..."
+LOCAL_DUP_COUNT=0
+
+# Build hash list for current batch (parallel arrays — bash 3.2 compatible)
+CURRENT_HASHES=()
+CURRENT_PATHS=()
+for file in "${PROCESSED_FILES[@]}"; do
+  CURRENT_HASHES+=("$(shasum "$file" | awk '{print $1}')")
+  CURRENT_PATHS+=("$file")
+done
+
+while IFS= read -r -d '' existing; do
+  # Skip files from current batch
+  IS_CURRENT=false
+  for current in "${PROCESSED_FILES[@]}"; do
+    if [[ "$existing" == "$current" ]]; then
+      IS_CURRENT=true
+      break
+    fi
+  done
+  if [[ "$IS_CURRENT" == true ]]; then
+    continue
+  fi
+  # Check if a current file has the same hash (i.e., same image, different name)
+  EXISTING_HASH=$(shasum "$existing" | awk '{print $1}')
+  MATCHED=false
+  for hash_index in "${!CURRENT_HASHES[@]}"; do
+    if [[ "${CURRENT_HASHES[$hash_index]}" == "$EXISTING_HASH" ]]; then
+      echo "  Replaced: $(basename "$existing") → $(basename "${CURRENT_PATHS[$hash_index]}")"
+      MATCHED=true
+      break
+    fi
+  done
+  if [[ "$MATCHED" == false ]]; then
+    echo "  Removed stale: $(basename "$existing")"
+  fi
+  rm "$existing"
+  LOCAL_DUP_COUNT=$((LOCAL_DUP_COUNT + 1))
+done < <(find "$PROCESSED_DIR" -maxdepth 1 -type f -print0)
+if [[ $LOCAL_DUP_COUNT -eq 0 ]]; then
+  echo "  No duplicates or stale files found"
+fi
+
+# Sanity dedup: check which files are already uploaded
+echo ""
+echo "Checking Sanity for upload status..."
 echo ""
 
 : "${SANITY_PROJECT_ID:?SANITY_PROJECT_ID is required}"
@@ -137,10 +184,14 @@ if result and isinstance(result, dict):
 }
 
 NEW_COUNT=0
-DUP_COUNT=0
-DUP_FILES=()
+UPLOADED_COUNT=0
 
 for file in "${PROCESSED_FILES[@]}"; do
+  # Skip files that were removed during local dedup
+  if [[ ! -f "$file" ]]; then
+    continue
+  fi
+
   FILENAME=$(basename "$file")
   HASH=$(shasum "$file" | awk '{print $1}')
 
@@ -154,41 +205,18 @@ for file in "${PROCESSED_FILES[@]}"; do
 
   if [[ -n "$ASSET_ID" ]]; then
     ASSET_LABEL=$(echo "$RESPONSE" | parse_json_field "label")
-    echo "  SKIP (duplicate): $FILENAME → already uploaded as $ASSET_ID${ASSET_LABEL:+ ($ASSET_LABEL)}"
-    DUP_COUNT=$((DUP_COUNT + 1))
-    DUP_FILES+=("$file")
+    ASSET_FILENAME=$(echo "$RESPONSE" | parse_json_field "originalFilename")
+    if [[ "$ASSET_FILENAME" != "$FILENAME" ]]; then
+      echo "  RENAME: $FILENAME → uploaded as $ASSET_ID (currently \"${ASSET_FILENAME}\")"
+    else
+      echo "  UPLOADED: $FILENAME → $ASSET_ID${ASSET_LABEL:+ ($ASSET_LABEL)}"
+    fi
+    UPLOADED_COUNT=$((UPLOADED_COUNT + 1))
   else
     echo "  NEW: $FILENAME"
     NEW_COUNT=$((NEW_COUNT + 1))
   fi
 done
 
-# Clean up: remove duplicate files from _processed/
-if [[ ${#DUP_FILES[@]} -gt 0 ]]; then
-  echo ""
-  echo "Cleaning up ${#DUP_FILES[@]} duplicate(s) from _processed/..."
-  for dupfile in "${DUP_FILES[@]}"; do
-    rm "$dupfile"
-    echo "  Removed: $(basename "$dupfile")"
-  done
-fi
-
-# Clean up: remove stale files from previous runs (not in current batch)
-STALE_COUNT=0
-while IFS= read -r -d '' existing; do
-  IS_CURRENT=false
-  for current in "${PROCESSED_FILES[@]}"; do
-    if [[ "$existing" == "$current" ]]; then
-      IS_CURRENT=true
-      break
-    fi
-  done
-  if [[ "$IS_CURRENT" == false ]]; then
-    rm "$existing"
-    echo "  Removed stale: $(basename "$existing")"
-    STALE_COUNT=$((STALE_COUNT + 1))
-  fi
-done < <(find "$PROCESSED_DIR" -maxdepth 1 -type f -print0)
-
 echo ""
-echo "Summary: $((NEW_COUNT + DUP_COUNT)) files processed — $NEW_COUNT new, $DUP_COUNT duplicate(s) removed${STALE_COUNT:+, $STALE_COUNT stale removed}"
+echo "Summary: _processed/ contains $((NEW_COUNT + UPLOADED_COUNT)) file(s) — $NEW_COUNT new, $UPLOADED_COUNT already uploaded"
