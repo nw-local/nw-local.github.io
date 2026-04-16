@@ -138,6 +138,7 @@ if result and isinstance(result, dict):
 
 NEW_COUNT=0
 DUP_COUNT=0
+DUP_FILES=()
 
 for file in "${PROCESSED_FILES[@]}"; do
   FILENAME=$(basename "$file")
@@ -155,11 +156,39 @@ for file in "${PROCESSED_FILES[@]}"; do
     ASSET_LABEL=$(echo "$RESPONSE" | parse_json_field "label")
     echo "  SKIP (duplicate): $FILENAME → already uploaded as $ASSET_ID${ASSET_LABEL:+ ($ASSET_LABEL)}"
     DUP_COUNT=$((DUP_COUNT + 1))
+    DUP_FILES+=("$file")
   else
     echo "  NEW: $FILENAME"
     NEW_COUNT=$((NEW_COUNT + 1))
   fi
 done
 
+# Clean up: remove duplicate files from _processed/
+if [[ ${#DUP_FILES[@]} -gt 0 ]]; then
+  echo ""
+  echo "Cleaning up ${#DUP_FILES[@]} duplicate(s) from _processed/..."
+  for dupfile in "${DUP_FILES[@]}"; do
+    rm "$dupfile"
+    echo "  Removed: $(basename "$dupfile")"
+  done
+fi
+
+# Clean up: remove stale files from previous runs (not in current batch)
+STALE_COUNT=0
+while IFS= read -r -d '' existing; do
+  IS_CURRENT=false
+  for current in "${PROCESSED_FILES[@]}"; do
+    if [[ "$existing" == "$current" ]]; then
+      IS_CURRENT=true
+      break
+    fi
+  done
+  if [[ "$IS_CURRENT" == false ]]; then
+    rm "$existing"
+    echo "  Removed stale: $(basename "$existing")"
+    STALE_COUNT=$((STALE_COUNT + 1))
+  fi
+done < <(find "$PROCESSED_DIR" -maxdepth 1 -type f -print0)
+
 echo ""
-echo "Summary: $((NEW_COUNT + DUP_COUNT)) files processed — $NEW_COUNT new, $DUP_COUNT duplicate(s)"
+echo "Summary: $((NEW_COUNT + DUP_COUNT)) files processed — $NEW_COUNT new, $DUP_COUNT duplicate(s) removed${STALE_COUNT:+, $STALE_COUNT stale removed}"
