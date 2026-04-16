@@ -5,6 +5,7 @@ import PortableText from "../../components/PortableText.astro";
 import ProductBadge from "../../components/ProductBadge.astro";
 import ProductCard from "../../components/ProductCard.astro";
 import SectionHeading from "../../components/SectionHeading.astro";
+import ImageLightbox from "../../components/ImageLightbox.astro";
 import { getStrains, getStrain, getProductsByStrain } from "../../lib/sanity";
 import { urlFor } from "../../lib/image";
 
@@ -21,6 +22,11 @@ if( !strain ) return Astro.redirect( "/strains" );
 
 const products = await getProductsByStrain( strain._id ) ?? [];
 const ogImage = strain.heroImage?.asset ? urlFor( strain.heroImage ).width( 1200 ).height( 630 ).format( "jpg" ).url() : undefined;
+
+const lightboxImages = (strain.gallery ?? []).map((image: { asset: unknown; alt?: string }) => ({
+  url: urlFor(image).width(1600).format("webp").url(),
+  alt: image.alt ?? strain.name,
+}));
 ---
 
 <Layout title={strain.name} description={`${strain.name} — ${strain.strainType} cannabis strain by Northwest Local Cannabis.`} ogImage={ogImage}>
@@ -80,18 +86,20 @@ const ogImage = strain.heroImage?.asset ? urlFor( strain.heroImage ).width( 1200
   {strain.gallery && strain.gallery.length > 0 && (
     <section class="fade-in" style="margin-bottom:3rem;">
       <SectionHeading title="Gallery" />
-      <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));gap:1rem;">
-        {strain.gallery.map( image => (
+      <div class="gallery-grid">
+        {strain.gallery.map((image, index) => (
           <img
-            src={urlFor( image ).width( 500 ).height( 500 ).format( "webp" ).url()}
-            alt={image.alt ?? ""}
-            width="500"
-            height="500"
-            style="border-radius:8px;object-fit:cover;width:100%;aspect-ratio:1;"
+            src={urlFor(image).width(600).height(600).format("webp").url()}
+            alt={image.alt ?? strain.name}
+            width="600"
+            height="600"
+            class="gallery-thumb"
+            data-lightbox-index={index}
             loading="lazy"
           />
-        ) )}
+        ))}
       </div>
+      <ImageLightbox images={lightboxImages} />
     </section>
   )}
 
@@ -106,3 +114,25 @@ const ogImage = strain.heroImage?.asset ? urlFor( strain.heroImage ).width( 1200
     </section>
   )}
 </Layout>
+
+<style>
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+
+  .gallery-thumb {
+    border-radius: 8px;
+    object-fit: cover;
+    width: 100%;
+    aspect-ratio: 1;
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+  }
+
+  .gallery-thumb:hover {
+    transform: scale(1.03);
+    filter: brightness(1.1);
+  }
+</style>
