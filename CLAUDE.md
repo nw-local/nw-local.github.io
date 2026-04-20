@@ -78,6 +78,7 @@ Required in `.env` (and as GitHub Actions secrets):
 | Skill | Purpose |
 |-------|---------|
 | `/new-strain` | Add a strain to the Sanity catalog |
+| `/update-strain` | Update a strain's images, content, or fields |
 | `/new-product` | Add a product under an existing strain |
 | `/new-post` | Create and publish a blog post |
 | `/new-retailer` | Add a retail partner |
