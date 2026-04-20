@@ -31,7 +31,7 @@ const { name, slug, strainType, effects, heroImage, available } = Astro.props;
       <ProductBadge type={strainType} />
       {!available && <span class="product-badge">Unavailable</span>}
     </div>
-    <h2 class="card-title">{name}</h2>
+    <h3 class="card-title">{name}</h3>
     {effects && effects.length > 0 && (
       <p>{effects.slice( 0, 3 ).join( " · " )}</p>
     )}
