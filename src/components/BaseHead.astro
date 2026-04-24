@@ -7,6 +7,10 @@ interface Props {
   ogImage?: string
 }
 
+const GOOGLE_ANALYTICS_ID = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID;
+
+if( !GOOGLE_ANALYTICS_ID ) throw new Error( "Missing PUBLIC_GOOGLE_ANALYTICS_ID env var" );
+
 const canonicalURL = new URL( Astro.url.pathname, Astro.site );
 const { title, description, ogImage } = Astro.props;
 const resolvedOgImage = ogImage ?? new URL( "/og-default.jpg", Astro.site ).toString();
@@ -36,3 +40,11 @@ const resolvedOgImage = ogImage ?? new URL( "/og-default.jpg", Astro.site ).toSt
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={resolvedOgImage} />
+
+<script async src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}></script>
+<script define:vars={{ GOOGLE_ANALYTICS_ID }}>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', GOOGLE_ANALYTICS_ID);
+</script>
