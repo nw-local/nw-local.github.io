@@ -29,3 +29,18 @@ lint:
 
 format:
 	yarn format
+
+# Upgrade dependencies to their latest minor/patch versions, respecting the
+# tilde (~) ranges in package.json. Safe for routine maintenance — will not
+# introduce breaking major-version changes.
+upgrade:
+	-@yarn outdated
+	@yarn upgrade --tilde
+
+# Upgrade dependencies to their absolute latest versions, ignoring semver
+# ranges in package.json entirely. Use when intentionally adopting major
+# version bumps. Review the `yarn outdated` output before and after carefully.
+upgrade-latest:
+	-@yarn outdated
+	@yarn upgrade --latest
+	-@yarn outdated

@@ -52,6 +52,7 @@ Required in `.env` (and as GitHub Actions secrets):
 - `SANITY_PROJECT_ID` — Sanity project ID (`nyd3p2n0`)
 - `SANITY_DATASET` — Sanity dataset name (`production`)
 - `SANITY_API_TOKEN` — Read-only API token for build-time fetching
+- `PUBLIC_GOOGLE_ANALYTICS_ID` — Google Analytics 4 measurement ID (e.g. `G-XXXXXXXXXX`)
 
 ## Deployment
 
