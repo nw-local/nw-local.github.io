@@ -1,0 +1,16 @@
+{
+  "ci": {
+    "collect": {
+      "staticDistDir": "./dist",
+      "url": [
+        "/",
+        "/strains/super-boof/",
+        "/about-us/"
+      ],
+      "numberOfRuns": 1
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    }
+  }
+}
