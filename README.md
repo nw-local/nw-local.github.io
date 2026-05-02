@@ -4,6 +4,7 @@ Customer-facing website for **Northwest Local Cannabis**, a Washington State i50
 
 [![Deploy to GitHub Pages](https://github.com/nw-local/nw-local.github.io/actions/workflows/deploy.yml/badge.svg)](https://github.com/nw-local/nw-local.github.io/actions/workflows/deploy.yml)
 [![CI](https://github.com/nw-local/nw-local.github.io/actions/workflows/ci.yml/badge.svg)](https://github.com/nw-local/nw-local.github.io/actions/workflows/ci.yml)
+[![Nightly audit](https://github.com/nw-local/nw-local.github.io/actions/workflows/nightly.yml/badge.svg)](https://github.com/nw-local/nw-local.github.io/actions/workflows/nightly.yml)
 [![Astro](https://img.shields.io/badge/Astro-6.x-FF5D01?logo=astro&logoColor=white)](https://astro.build)
 [![Sanity CMS](https://img.shields.io/badge/Sanity-CMS-F03E2F?logo=sanity&logoColor=white)](https://www.sanity.io)
 [![Node](https://img.shields.io/badge/node-%E2%89%A522.13-339933?logo=node.js&logoColor=white)](https://nodejs.org)
@@ -83,11 +84,17 @@ Run `make` (no args) to print the full target list with descriptions.
 
 ## Automated testing
 
-For a content-driven static site with no business logic, heavy testing is overkill — the failure modes are different from those of a typical app. The CI workflow ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) is shaped around catching failure modes that *do* happen: broken queries, broken links, regressed SEO/perf signals.
+For a content-driven static site with no business logic, heavy testing is overkill — the failure modes are different from those of a typical app. The workflows are shaped around catching failure modes that *do* happen: broken queries, broken links, regressed SEO/perf signals, and content drift over time.
 
-Jobs that run on every PR and push to `main`:
+Workflow layout:
 
-- **Type check** — `yarn astro check`. Catches broken GROQ query types, missing required fields on Sanity entity types, and Astro template errors. The data layer in [`src/lib/sanity.ts`](src/lib/sanity.ts) parameterizes each `fetch<T>()` call with a typed entity (`Strain`, `Product`, etc.), so consumers in `.astro` pages get strict typing for free.
+- [`ci.yml`](.github/workflows/ci.yml) — runs on every PR and push to `main`. Type check + audit.
+- [`audit.yml`](.github/workflows/audit.yml) — **reusable** workflow (`workflow_call`) that does build + sitemap validation + link check + Lighthouse. Called by both CI and the nightly job.
+- [`nightly.yml`](.github/workflows/nightly.yml) — runs the same audit on a daily cron (08:27 UTC). Catches content drift on `main` between PRs (e.g., a Sanity-published strain whose Learn More link rotted last week), and gives Lighthouse a daily perf data point. Manual `workflow_dispatch` trigger for ad-hoc runs.
+
+What each step in the audit does:
+
+- **Type check** (CI only) — `yarn astro check`. Catches broken GROQ query types, missing required fields on Sanity entity types, and Astro template errors. The data layer in [`src/lib/sanity.ts`](src/lib/sanity.ts) parameterizes each `fetch<T>()` call with a typed entity (`Strain`, `Product`, etc.), so consumers in `.astro` pages get strict typing for free.
 - **Build** — `yarn build`. Uploads `dist/` as an artifact for the audit jobs below.
 - **Validate sitemap** — `xmllint` checks `dist/sitemap-index.xml` and `dist/sitemap-0.xml` are well-formed and contain `<loc>` entries.
 - **Check links** — [Lychee](https://lychee.cli.rs/) walks every link in built HTML (internal + external). Accepts 200/301/302 plus 403/429 (bot-blockers and rate limits) so well-known breeder sites that block automated requests don't cause false positives. Blocking — broken links fail the check.
