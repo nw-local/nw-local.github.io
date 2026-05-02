@@ -1,0 +1,6 @@
+# URLs that fail link checking for non-content reasons.
+# Exclude only when the URL works in browsers but Lychee can't reach it.
+
+# businesswire.com — HTTP/2 protocol negotiation fails from Lychee's HTTP client.
+# The link works fine in browsers; it's referenced from Super Boof's "Learn More" section.
+https://www.businesswire.com/news/home/20241211290405/en/Leafly-Announces-Super-Boof-as-the-Leafly-Strain-of-the-Year-2024
