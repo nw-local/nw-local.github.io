@@ -60,8 +60,11 @@ The dev server runs at <http://localhost:4321>.
 
 All commands run from the repo root.
 
+Run `make` (no args) to print the full target list with descriptions.
+
 | Task                | Command              | Notes                                                |
 | ------------------- | -------------------- | ---------------------------------------------------- |
+| List all targets    | `make` or `make help`| self-documenting — auto-generated from `## comments` |
 | Install deps        | `make install`       | runs `yarn install` in root and `studio/`            |
 | Dev server          | `make dev`           | localhost:4321                                       |
 | Production build    | `make build`         | output → `./dist/`                                   |
