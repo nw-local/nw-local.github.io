@@ -33,6 +33,18 @@ No test framework is configured.
 - **Dynamic routing**: `src/pages/strains/[...slug].astro` and `src/pages/blog/[...slug].astro` generate static pages via `getStaticPaths()`
 - **Webhook rebuild**: Sanity content publish triggers a GitHub Actions rebuild via `workflow_dispatch`
 
+## Coding Conventions
+
+- **Descriptive identifiers** — no single-character names, including in lambdas/callbacks (`strain` not `s`, `index` not `i`, `image` not `img`)
+- **No `as` type assertions** — use type guards, narrowing, or `satisfies`; assertions bypass the type checker and hide bugs
+- **No `eslint-disable` comments** — fix the underlying code instead of suppressing lint errors
+- **Strict env vars** — assert at module level that required vars are set, no fallback values. Pattern established in `src/lib/sanity.ts` and `src/components/BaseHead.astro` — the app fails fast on misconfiguration rather than rendering with broken data.
+- **No silent failures** — throw on unexpected states, reject unknown fields, never silently ignore errors. Loud failures beat silent bugs.
+- **Extract reused strings** — anything used in 2+ places should be a named constant, not duplicated inline
+- **Use central data types** — card components (`StrainCard`, `ProductCard`, `BlogPostCard`, `RetailerCard`) import their `Props` from `src/lib/sanity.ts` rather than redeclaring inline shapes. This keeps the Sanity schema, data layer, and component layer in lockstep — when a field is added or renamed in `sanity.ts`, type errors surface in every consumer instead of silently drifting.
+- **Whitespace inside parens** — codebase style is `function name( arg )` and `if( condition )` with spaces inside parens; ESLint enforces this, so `make format` will rewrite tight-paren code automatically
+- **Run `make format` before committing** — auto-fixes most lint and formatting issues
+
 ## Sanity Content Model
 
 | Document Type | Purpose |
