@@ -8,6 +8,12 @@ import SectionHeading from "../../components/SectionHeading.astro";
 import ImageLightbox from "../../components/ImageLightbox.astro";
 import { getStrains, getStrain, getProductsByStrain } from "../../lib/sanity";
 import { urlFor } from "../../lib/image";
+import {
+  buildBreadcrumbList,
+  buildProduct,
+  normalizeSiteUrl,
+  type StructuredData,
+} from "../../lib/jsonld";
 
 export async function getStaticPaths() {
   const strains = await getStrains() ?? [];
@@ -27,9 +33,20 @@ const lightboxImages = ( strain.gallery ?? [] ).map( ( image: { asset: unknown; 
   url: urlFor( image ).width( 1600 ).format( "webp" ).url(),
   alt: image.alt ?? strain.name,
 }) );
+
+const siteUrl = Astro.site?.toString() ?? "https://www.nw-local.com";
+const baseUrl = normalizeSiteUrl( siteUrl );
+const structuredData: StructuredData[] = [
+  buildProduct( strain, siteUrl, ogImage, "Northwest Local Cannabis" ),
+  buildBreadcrumbList( [
+    { name: "Home", url: `${baseUrl}/` },
+    { name: "Strains", url: `${baseUrl}/strains/` },
+    { name: strain.name, url: `${baseUrl}/strains/${strain.slug.current}/` },
+  ] ),
+];
 ---
 
-<Layout title={strain.name} description={`${strain.name} — ${strain.strainType} cannabis strain by Northwest Local Cannabis.`} ogImage={ogImage}>
+<Layout title={strain.name} description={`${strain.name} — ${strain.strainType} cannabis strain by Northwest Local Cannabis.`} ogImage={ogImage} structuredData={structuredData}>
   <Hero title={strain.name}>
     <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem;">
       <ProductBadge type={strain.strainType} />
