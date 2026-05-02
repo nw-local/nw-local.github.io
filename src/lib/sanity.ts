@@ -6,6 +6,7 @@ const SANITY_API_TOKEN = import.meta.env.SANITY_API_TOKEN;
 
 if( !SANITY_PROJECT_ID ) throw new Error( "Missing SANITY_PROJECT_ID env var" );
 if( !SANITY_DATASET ) throw new Error( "Missing SANITY_DATASET env var" );
+if( !SANITY_API_TOKEN ) throw new Error( "Missing SANITY_API_TOKEN env var" );
 
 export const sanityClient = createClient({
   projectId: SANITY_PROJECT_ID,

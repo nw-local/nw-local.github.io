@@ -70,8 +70,12 @@ const TERPENE_FILTERS = allTerpenes.map( ( terpene: string ) => ({ value: terpen
   const ITEMS_PER_PAGE = 12;
 
   const grid = document.getElementById( "strain-grid" )!;
-  const searchInput = document.getElementById( "strain-search" ) as HTMLInputElement;
-  const sortSelect = document.getElementById( "strain-sort" ) as HTMLSelectElement;
+  const searchInputElement = document.getElementById( "strain-search" );
+  const sortSelectElement = document.getElementById( "strain-sort" );
+  if( !( searchInputElement instanceof HTMLInputElement ) ) throw new Error( "Expected #strain-search to be an input" );
+  if( !( sortSelectElement instanceof HTMLSelectElement ) ) throw new Error( "Expected #strain-sort to be a select" );
+  const searchInput: HTMLInputElement = searchInputElement;
+  const sortSelect: HTMLSelectElement = sortSelectElement;
   const emptyMessage = document.getElementById( "strain-empty" )!;
   const paginationNav = document.getElementById( "strain-pagination" )!;
   const countDisplay = document.getElementById( "strain-count" )!;
@@ -100,7 +104,7 @@ const TERPENE_FILTERS = allTerpenes.map( ( terpene: string ) => ({ value: terpen
 
         const cardValue = card.getAttribute( attribute ) ?? "";
         if( mode === "contains" ) {
-          const values = cardValue.split( "," ).map( v => v.trim().toLowerCase() );
+          const values = cardValue.split( "," ).map( entry => entry.trim().toLowerCase() );
           if( !values.includes( filterValue.toLowerCase() ) ) passesFilters = false;
         } else {
           if( cardValue !== filterValue ) passesFilters = false;

@@ -50,7 +50,7 @@ const { filters, filterAttribute = "data-category", matchMode = "exact", label, 
 
           const value = card.getAttribute( attribute ) ?? "";
           if( mode === "contains" ) {
-            const values = value.split( "," ).map( v => v.trim().toLowerCase() );
+            const values = value.split( "," ).map( entry => entry.trim().toLowerCase() );
             if( !values.includes( filter.toLowerCase() ) ) visible = false;
           } else {
             if( value !== filter ) visible = false;
@@ -67,7 +67,7 @@ const { filters, filterAttribute = "data-category", matchMode = "exact", label, 
 
       buttons.forEach( button => {
         button.addEventListener( "click", () => {
-          buttons.forEach( b => b.classList.remove( "active" ) );
+          buttons.forEach( otherButton => otherButton.classList.remove( "active" ) );
           button.classList.add( "active" );
           applyFilters( parent );
         });
