@@ -15,10 +15,59 @@ export const sanityClient = createClient({
   token: SANITY_API_TOKEN,
 });
 
+// --- Shared types ---
+
+export interface SanitySlug {
+  current: string;
+}
+
+export interface SanityImage {
+  asset: {
+    _id?: string;
+    _ref?: string;
+    url?: string;
+    metadata?: unknown;
+  };
+  alt?: string;
+  caption?: string;
+  crop?: unknown;
+  hotspot?: unknown;
+}
+
+export type StrainType = "indica" | "sativa" | "hybrid";
+
+export interface PortableTextBlock {
+  _type: string;
+  _key?: string;
+  [key: string]: unknown;
+}
+
+export type PortableText = PortableTextBlock[];
+
 // --- Strains ---
 
+export interface StrainSummary {
+  _id: string;
+  name: string;
+  slug: SanitySlug;
+  strainType: StrainType;
+  effects?: string[];
+  terpenes?: string[];
+  thcRange?: string;
+  cbdRange?: string;
+  nextHarvestDate?: string;
+  heroImage?: SanityImage;
+  featured?: boolean;
+  available?: boolean;
+}
+
+export interface Strain extends StrainSummary {
+  description?: PortableText;
+  gallery?: SanityImage[];
+}
+
 export async function getStrains() {
-  return sanityClient.fetch(
+  return sanityClient.fetch<StrainSummary[]>(
     `*[_type == "strain"] | order(sortOrder asc, name asc) {
       _id, name, slug, strainType, effects, terpenes,
       thcRange, cbdRange, nextHarvestDate,
@@ -29,7 +78,7 @@ export async function getStrains() {
 }
 
 export async function getStrain( slug: string ) {
-  return sanityClient.fetch(
+  return sanityClient.fetch<Strain | null>(
     `*[_type == "strain" && slug.current == $slug][0] {
       _id, name, slug, strainType, description,
       effects, terpenes, thcRange, cbdRange, nextHarvestDate,
@@ -43,8 +92,32 @@ export async function getStrain( slug: string ) {
 
 // --- Terpenes ---
 
+export interface TerpeneSummary {
+  _id: string;
+  name: string;
+  slug: SanitySlug;
+  tagline?: string;
+  aroma?: string[];
+  effects?: string[];
+  foundIn?: string[];
+  heroImage?: SanityImage;
+}
+
+export interface TerpeneStrainRef {
+  _id: string;
+  name: string;
+  slug: SanitySlug;
+  strainType: StrainType;
+  heroImage?: SanityImage;
+}
+
+export interface Terpene extends TerpeneSummary {
+  description?: PortableText;
+  strains?: TerpeneStrainRef[];
+}
+
 export async function getTerpenes() {
-  return sanityClient.fetch(
+  return sanityClient.fetch<TerpeneSummary[]>(
     `*[_type == "terpene"] | order(sortOrder asc, name asc) {
       _id, name, slug, tagline, aroma, effects, foundIn,
       heroImage { asset->, alt, crop, hotspot }
@@ -53,7 +126,7 @@ export async function getTerpenes() {
 }
 
 export async function getTerpene( slug: string ) {
-  return sanityClient.fetch(
+  return sanityClient.fetch<Terpene | null>(
     `*[_type == "terpene" && slug.current == $slug][0] {
       _id, name, slug, tagline, aroma, effects, foundIn,
       description[] {
@@ -72,8 +145,38 @@ export async function getTerpene( slug: string ) {
 
 // --- Products ---
 
+export interface ProductStrainRef {
+  _id: string;
+  name: string;
+  slug: SanitySlug;
+  strainType: StrainType;
+  heroImage?: SanityImage;
+}
+
+export interface ProductSummary {
+  _id: string;
+  name: string;
+  slug: SanitySlug;
+  category: string;
+  weight?: string;
+  available?: boolean;
+  image?: SanityImage;
+  strain?: ProductStrainRef;
+}
+
+export interface ProductWithDescription {
+  _id: string;
+  name: string;
+  slug: SanitySlug;
+  category: string;
+  weight?: string;
+  available?: boolean;
+  image?: SanityImage;
+  description?: PortableText;
+}
+
 export async function getProducts() {
-  return sanityClient.fetch(
+  return sanityClient.fetch<ProductSummary[]>(
     `*[_type == "product"] | order(sortOrder asc, name asc) {
       _id, name, slug, category, weight, available,
       image { asset->, alt },
@@ -83,7 +186,7 @@ export async function getProducts() {
 }
 
 export async function getProductsByStrain( strainId: string ) {
-  return sanityClient.fetch(
+  return sanityClient.fetch<ProductWithDescription[]>(
     `*[_type == "product" && strain._ref == $strainId] | order(sortOrder asc) {
       _id, name, slug, category, weight, available,
       image { asset->, alt },
@@ -95,8 +198,22 @@ export async function getProductsByStrain( strainId: string ) {
 
 // --- Blog ---
 
+export interface BlogPostSummary {
+  _id: string;
+  title: string;
+  slug: SanitySlug;
+  description?: string;
+  publishedAt: string;
+  tags?: string[];
+  heroImage?: SanityImage;
+}
+
+export interface BlogPost extends BlogPostSummary {
+  body?: PortableText;
+}
+
 export async function getBlogPosts() {
-  return sanityClient.fetch(
+  return sanityClient.fetch<BlogPostSummary[]>(
     `*[_type == "blogPost"] | order(publishedAt desc) {
       _id, title, slug, description, publishedAt, tags,
       heroImage { asset->, alt, crop, hotspot }
@@ -105,7 +222,7 @@ export async function getBlogPosts() {
 }
 
 export async function getBlogPost( slug: string ) {
-  return sanityClient.fetch(
+  return sanityClient.fetch<BlogPost | null>(
     `*[_type == "blogPost" && slug.current == $slug][0] {
       _id, title, slug, description, publishedAt, tags,
       heroImage { asset->, alt, crop, hotspot },
@@ -120,8 +237,33 @@ export async function getBlogPost( slug: string ) {
 
 // --- Retailers ---
 
+export interface RetailerProductRef {
+  _id: string;
+  name: string;
+  slug: SanitySlug;
+  category: string;
+}
+
+export interface Retailer {
+  _id: string;
+  name: string;
+  slug: SanitySlug;
+  address?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  lat?: number;
+  lng?: number;
+  website?: string;
+  phone?: string;
+  email?: string;
+  logo?: SanityImage;
+  featured?: boolean;
+  productsAvailable?: RetailerProductRef[];
+}
+
 export async function getRetailers() {
-  return sanityClient.fetch(
+  return sanityClient.fetch<Retailer[]>(
     `*[_type == "retailer"] | order(city asc, name asc) {
       _id, name, slug, address, city, state, zip,
       lat, lng, website, phone, email,
@@ -134,8 +276,17 @@ export async function getRetailers() {
 
 // --- Pages (singletons by pageId) ---
 
+export interface Page {
+  _id: string;
+  title: string;
+  pageId: string;
+  seoDescription?: string;
+  heroImage?: SanityImage;
+  body?: PortableText;
+}
+
 export async function getPage( pageId: string ) {
-  return sanityClient.fetch(
+  return sanityClient.fetch<Page | null>(
     `*[_type == "page" && pageId == $pageId][0] {
       _id, title, pageId, seoDescription,
       heroImage { asset->, alt, crop, hotspot },
@@ -150,8 +301,25 @@ export async function getPage( pageId: string ) {
 
 // --- Site Settings ---
 
+export interface SocialLinks {
+  instagram?: string;
+  facebook?: string;
+  twitter?: string;
+}
+
+export interface SiteSettings {
+  siteTitle?: string;
+  siteDescription?: string;
+  logo?: SanityImage;
+  socialLinks?: SocialLinks;
+  contactEmail?: string;
+  contactPhone?: string;
+  address?: string;
+  ageGateMessage?: string;
+}
+
 export async function getSiteSettings() {
-  return sanityClient.fetch(
+  return sanityClient.fetch<SiteSettings | null>(
     `*[_type == "siteSettings"][0] {
       siteTitle, siteDescription,
       logo { asset->, alt },
@@ -164,8 +332,21 @@ export async function getSiteSettings() {
 
 // --- Retailer Page ---
 
+export interface RetailerPageDownloadable {
+  label: string;
+  url: string;
+}
+
+export interface RetailerPage {
+  headline?: string;
+  intro?: PortableText;
+  contactEmail?: string;
+  contactPhone?: string;
+  downloadables?: RetailerPageDownloadable[];
+}
+
 export async function getRetailerPage() {
-  return sanityClient.fetch(
+  return sanityClient.fetch<RetailerPage | null>(
     `*[_type == "retailerPage"][0] {
       headline, intro[] {
         ...,

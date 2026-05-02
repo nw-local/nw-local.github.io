@@ -1,13 +1,8 @@
 ---
 import { urlFor } from "../lib/image";
+import type { BlogPostSummary } from "../lib/sanity";
 
-interface Props {
-  title: string
-  slug: { current: string }
-  description: string
-  publishedAt: string
-  heroImage?: { asset: { url: string }; alt?: string }
-}
+type Props = BlogPostSummary;
 
 const { title, slug, description, publishedAt, heroImage } = Astro.props;
 const formattedDate = new Date( publishedAt ).toLocaleDateString( "en-US", {

@@ -23,10 +23,10 @@ if( !strain ) return Astro.redirect( "/strains" );
 const products = await getProductsByStrain( strain._id ) ?? [];
 const ogImage = strain.heroImage?.asset ? urlFor( strain.heroImage ).width( 1200 ).height( 630 ).format( "jpg" ).url() : undefined;
 
-const lightboxImages = (strain.gallery ?? []).map((image: { asset: unknown; alt?: string }) => ({
-  url: urlFor(image).width(1600).format("webp").url(),
+const lightboxImages = ( strain.gallery ?? [] ).map( ( image: { asset: unknown; alt?: string }) => ({
+  url: urlFor( image ).width( 1600 ).format( "webp" ).url(),
   alt: image.alt ?? strain.name,
-}));
+}) );
 ---
 
 <Layout title={strain.name} description={`${strain.name} — ${strain.strainType} cannabis strain by Northwest Local Cannabis.`} ogImage={ogImage}>
@@ -87,9 +87,9 @@ const lightboxImages = (strain.gallery ?? []).map((image: { asset: unknown; alt?
     <section class="fade-in" style="margin-bottom:3rem;">
       <SectionHeading title="Gallery" />
       <div class="gallery-grid">
-        {strain.gallery.map((image, index) => (
+        {strain.gallery.map( ( image, index ) => (
           <img
-            src={urlFor(image).width(600).height(600).format("webp").url()}
+            src={urlFor( image ).width( 600 ).height( 600 ).format( "webp" ).url()}
             alt={image.alt ?? strain.name}
             width="600"
             height="600"
@@ -97,7 +97,7 @@ const lightboxImages = (strain.gallery ?? []).map((image: { asset: unknown; alt?
             data-lightbox-index={index}
             loading="lazy"
           />
-        ))}
+        ) )}
       </div>
     </section>
   )}

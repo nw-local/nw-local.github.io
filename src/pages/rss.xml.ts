@@ -10,10 +10,10 @@ export async function GET( context: APIContext ) {
     title: settings?.siteTitle ?? "Northwest Local Cannabis",
     description: settings?.siteDescription ?? "Washington State licensed cannabis producer and processor.",
     site: context.site!.toString(),
-    items: posts.map( ( post: { title: string; slug: { current: string }; description: string; publishedAt: string }) => ({
+    items: posts.map( post => ({
       title: post.title,
       pubDate: new Date( post.publishedAt ),
-      description: post.description,
+      description: post.description ?? "",
       link: `/blog/${post.slug.current}/`,
     }) ),
   });

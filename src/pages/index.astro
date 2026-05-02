@@ -8,7 +8,7 @@ import { getSiteSettings, getStrains, getPage } from "../lib/sanity";
 const settings = await getSiteSettings();
 const page = await getPage( "home" );
 const allStrains = await getStrains() ?? [];
-const featuredStrains = allStrains.filter( ( strain: { featured: boolean }) => strain.featured );
+const featuredStrains = allStrains.filter( strain => strain.featured );
 ---
 
 <Layout

@@ -1,14 +1,7 @@
 ---
-interface Props {
-  name: string
-  address: string
-  city: string
-  state: string
-  zip: string
-  website?: string
-  phone?: string
-  email?: string
-}
+import type { Retailer } from "../lib/sanity";
+
+type Props = Retailer;
 
 const { name, address, city, state, zip, website, phone, email } = Astro.props;
 ---

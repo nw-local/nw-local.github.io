@@ -1,15 +1,9 @@
 ---
 import { urlFor } from "../lib/image";
 import ProductBadge from "./ProductBadge.astro";
+import type { StrainSummary } from "../lib/sanity";
 
-interface Props {
-  name: string
-  slug: { current: string }
-  strainType: string
-  effects?: string[]
-  heroImage?: { asset: { url: string }; alt?: string }
-  available: boolean
-}
+type Props = StrainSummary;
 
 const { name, slug, strainType, effects, heroImage, available } = Astro.props;
 ---
