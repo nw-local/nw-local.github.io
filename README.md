@@ -41,9 +41,8 @@ Prereqs: Node 22.13+, yarn, and access to the Sanity project.
 git clone git@github.com:nw-local/nw-local.github.io.git nw-local.com
 cd nw-local.com
 
-# 2. Install
-yarn install
-cd studio && yarn install && cd ..
+# 2. Install (root + studio)
+make install
 
 # 3. Environment
 cp .env.example .env  # if present, otherwise see "Environment variables" below
@@ -63,6 +62,7 @@ All commands run from the repo root.
 
 | Task                | Command              | Notes                                                |
 | ------------------- | -------------------- | ---------------------------------------------------- |
+| Install deps        | `make install`       | runs `yarn install` in root and `studio/`            |
 | Dev server          | `make dev`           | localhost:4321                                       |
 | Production build    | `make build`         | output → `./dist/`                                   |
 | Preview build       | `make preview`       | local preview of the built site                      |

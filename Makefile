@@ -1,7 +1,11 @@
 -include .env
 export
 
-.PHONY: dev build preview studio deploy-studio upload-image prep-images lint format
+.PHONY: install dev build preview studio deploy-studio upload-image prep-images lint format
+
+install:
+	yarn install
+	cd studio && yarn install
 
 dev:
 	yarn dev
