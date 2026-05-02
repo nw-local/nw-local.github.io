@@ -6,6 +6,11 @@ import StrainCard from "../../components/StrainCard.astro";
 import SectionHeading from "../../components/SectionHeading.astro";
 import { getTerpenes, getTerpene } from "../../lib/sanity";
 import { urlFor } from "../../lib/image";
+import {
+  buildBreadcrumbList,
+  normalizeSiteUrl,
+  type StructuredData,
+} from "../../lib/jsonld";
 
 export async function getStaticPaths() {
   const terpenes = await getTerpenes() ?? [];
@@ -19,9 +24,19 @@ const terpene = await getTerpene( slug! );
 if( !terpene ) return Astro.redirect( "/terpenes" );
 
 const ogImage = terpene.heroImage?.asset ? urlFor( terpene.heroImage ).width( 1200 ).height( 630 ).format( "jpg" ).url() : undefined;
+
+const siteUrl = Astro.site?.toString() ?? "https://www.nw-local.com";
+const baseUrl = normalizeSiteUrl( siteUrl );
+const structuredData: StructuredData[] = [
+  buildBreadcrumbList( [
+    { name: "Home", url: `${baseUrl}/` },
+    { name: "Terpenes", url: `${baseUrl}/terpenes/` },
+    { name: terpene.name, url: `${baseUrl}/terpenes/${terpene.slug.current}/` },
+  ] ),
+];
 ---
 
-<Layout title={terpene.name} description={terpene.tagline ?? `Learn about ${terpene.name}, a terpene found in Northwest Local Cannabis strains.`} ogImage={ogImage}>
+<Layout title={terpene.name} description={terpene.tagline ?? `Learn about ${terpene.name}, a terpene found in Northwest Local Cannabis strains.`} ogImage={ogImage} structuredData={structuredData}>
   <Hero title={terpene.name}>
     {terpene.tagline && <p style="color:var(--text-secondary);margin-top:0.5rem;font-size:1.1rem;">{terpene.tagline}</p>}
   </Hero>

@@ -1,8 +1,14 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import PortableText from "../../components/PortableText.astro";
-import { getBlogPosts, getBlogPost } from "../../lib/sanity";
+import { getBlogPosts, getBlogPost, getSiteSettings } from "../../lib/sanity";
 import { urlFor } from "../../lib/image";
+import {
+  buildArticle,
+  buildBreadcrumbList,
+  normalizeSiteUrl,
+  type StructuredData,
+} from "../../lib/jsonld";
 
 export async function getStaticPaths() {
   const posts = await getBlogPosts() ?? [];
@@ -21,9 +27,21 @@ const formattedDate = new Date( post.publishedAt ).toLocaleDateString( "en-US", 
   day: "numeric",
 });
 const ogImage = post.heroImage?.asset ? urlFor( post.heroImage ).width( 1200 ).height( 630 ).format( "jpg" ).url() : undefined;
+
+const settings = await getSiteSettings();
+const siteUrl = Astro.site?.toString() ?? "https://www.nw-local.com";
+const baseUrl = normalizeSiteUrl( siteUrl );
+const structuredData: StructuredData[] = [
+  buildArticle( post, siteUrl, ogImage, settings ),
+  buildBreadcrumbList( [
+    { name: "Home", url: `${baseUrl}/` },
+    { name: "Blog", url: `${baseUrl}/blog/` },
+    { name: post.title, url: `${baseUrl}/blog/${post.slug.current}/` },
+  ] ),
+];
 ---
 
-<Layout title={post.title} description={post.description} ogImage={ogImage}>
+<Layout title={post.title} description={post.description} ogImage={ogImage} structuredData={structuredData}>
   <article style="max-width:var(--content-width);margin:0 auto;">
     <header style="margin-bottom:2rem;">
       <p style="font-size:0.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem;">

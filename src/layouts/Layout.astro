@@ -4,21 +4,28 @@ import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import AgeGate from "../components/AgeGate.astro";
 import { getSiteSettings } from "../lib/sanity";
+import { buildOrganization, type StructuredData } from "../lib/jsonld";
 
 interface Props {
   title: string
   description?: string
   ogImage?: string
+  structuredData?: StructuredData[]
 }
 
-const { title, description, ogImage } = Astro.props;
+const { title, description, ogImage, structuredData = [] } = Astro.props;
 const settings = await getSiteSettings();
+const siteUrl = Astro.site?.toString() ?? "https://www.nw-local.com";
+const organization = buildOrganization( settings, siteUrl );
+const allStructuredData: StructuredData[] = organization
+  ? [ organization, ...structuredData ]
+  : structuredData;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={title} description={description} ogImage={ogImage} />
+    <BaseHead title={title} description={description} ogImage={ogImage} structuredData={allStructuredData} />
   </head>
   <body>
     <AgeGate message={settings?.ageGateMessage} />
