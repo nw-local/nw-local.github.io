@@ -1,23 +1,12 @@
 ---
 import { urlFor } from "../lib/image";
 import ProductBadge from "./ProductBadge.astro";
+import type { ProductSummary, ProductWithDescription } from "../lib/sanity";
 
-interface Props {
-  name: string
-  slug: { current: string }
-  category: string
-  weight?: string
-  available: boolean
-  image?: { asset: { url: string }; alt?: string }
-  strain?: {
-    name: string
-    slug: { current: string }
-    strainType: string
-    heroImage?: { asset: { url: string }; alt?: string }
-  }
-}
+type Props = ProductSummary | ProductWithDescription;
 
-const { name, category, weight, available, image, strain } = Astro.props;
+const { name, category, weight, available, image } = Astro.props;
+const strain = "strain" in Astro.props ? Astro.props.strain : undefined;
 const displayImage = image ?? strain?.heroImage;
 ---
 

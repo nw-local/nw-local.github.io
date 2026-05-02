@@ -1,15 +1,8 @@
 ---
+import type { SiteSettings } from "../lib/sanity";
+
 interface Props {
-  settings: {
-    contactEmail?: string
-    contactPhone?: string
-    address?: string
-    socialLinks?: {
-      instagram?: string
-      facebook?: string
-      twitter?: string
-    }
-  }
+  settings: SiteSettings | null;
 }
 
 const { settings } = Astro.props;

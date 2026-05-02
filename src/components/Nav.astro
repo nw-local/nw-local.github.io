@@ -1,14 +1,9 @@
 ---
 import { urlFor } from "../lib/image";
+import type { SiteSettings } from "../lib/sanity";
 
 interface Props {
-  settings: {
-    siteTitle?: string
-    logo?: { asset: { url: string }; alt?: string }
-    socialLinks?: {
-      instagram?: string
-    }
-  }
+  settings: SiteSettings | null;
 }
 
 const { settings } = Astro.props;

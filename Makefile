@@ -1,46 +1,55 @@
 -include .env
 export
 
-.PHONY: dev build preview studio deploy-studio upload-image prep-images lint format
+.DEFAULT_GOAL := help
 
-dev:
+.PHONY: help install dev build preview studio deploy-studio upload-image prep-images lint format upgrade upgrade-latest
+
+help: ## Show this help message with all available targets
+	@grep -hE '^[a-zA-Z_-]+:.*?##' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
+
+install: ## Install dependencies for root and studio/
+	yarn install
+	cd studio && yarn install
+
+dev: ## Start the Astro dev server at localhost:4321
 	yarn dev
 
-build:
+build: ## Build the production site to ./dist/
 	yarn build
 
-preview:
+preview: ## Preview the production build locally
 	yarn preview
 
-studio:
+studio: ## Start the Sanity Studio dev server at localhost:3333
 	cd studio && npx sanity dev
 
-deploy-studio:
+deploy-studio: ## Deploy Sanity Studio to nw-local.sanity.studio
 	cd studio && npx sanity deploy
 
-upload-image:
+upload-image: ## Upload an image asset to Sanity (vars: FILE, LABEL, DESCRIPTION)
 	@./scripts/upload-image.sh "$(FILE)" "$(LABEL)" "$(DESCRIPTION)"
 
-prep-images:
+prep-images: ## Convert and rename a directory of images for Sanity (vars: DIR, STRAIN, RENAME)
 	@./scripts/prep-images.sh "$(DIR)" "$(STRAIN)" "$(RENAME)"
 
-lint:
+lint: ## Run ESLint
 	yarn lint
 
-format:
+format: ## Auto-fix lint and formatting issues
 	yarn format
 
 # Upgrade dependencies to their latest minor/patch versions, respecting the
 # tilde (~) ranges in package.json. Safe for routine maintenance — will not
 # introduce breaking major-version changes.
-upgrade:
+upgrade: ## Upgrade deps within tilde range (safe minor/patch bumps)
 	-@yarn outdated
 	@yarn upgrade --tilde
 
 # Upgrade dependencies to their absolute latest versions, ignoring semver
 # ranges in package.json entirely. Use when intentionally adopting major
 # version bumps. Review the `yarn outdated` output before and after carefully.
-upgrade-latest:
+upgrade-latest: ## Upgrade deps to absolute latest, ignoring semver
 	-@yarn outdated
 	@yarn upgrade --latest
 	-@yarn outdated
