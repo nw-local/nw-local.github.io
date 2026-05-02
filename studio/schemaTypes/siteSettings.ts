@@ -33,7 +33,7 @@ export const siteSettingsType = defineType({
       fields: [
         defineField({ name: 'instagram', title: 'Instagram URL', type: 'url', validation: (rule) => rule.uri({ scheme: ['http', 'https'] }) }),
         defineField({ name: 'facebook', title: 'Facebook URL', type: 'url', validation: (rule) => rule.uri({ scheme: ['http', 'https'] }) }),
-        defineField({ name: 'twitter', title: 'Twitter / X URL', type: 'url', validation: (rule) => rule.uri({ scheme: ['http', 'https'] }) }),
+        defineField({ name: 'twitter', title: 'Twitter URL', type: 'url', validation: (rule) => rule.uri({ scheme: ['http', 'https'] }) }),
       ],
     }),
     defineField({
